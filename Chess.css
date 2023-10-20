@@ -1,0 +1,126 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: grid;
+    place-items: center;
+    overflow-x: hidden;
+}
+
+h1 {
+    margin: 10px;
+    text-align: center;
+}
+h2 {
+    margin: 10px;
+    text-align: center;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 50px;
+    order:2;
+}
+.pagebox {
+    margin-top: 50px;
+    width: 200px;
+    height: 600px;
+    border: 1px solid blue;
+    background-color: rgb(196, 255, 199);
+}
+
+ul {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.divv {
+    display: flex;
+}
+
+li {
+    list-style: none;
+    display: grid;
+    place-items: center;
+    font-size: 0px;
+}
+.letters{
+    margin: auto;
+    width: 75px;
+    height: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+ 
+}
+.numbers{
+    margin: auto;
+    width: 75px;
+    height: 25px;
+    font-size: 20px;
+    font-weight: bold;
+ 
+}
+.box {
+    margin: .5px;
+    width: 75px;
+    height: 75px;
+    
+}
+
+#tog {
+    margin: 10px 0px;
+}
+
+
+.allimg {
+    max-width: 80%;
+    max-height:90%;
+    position: relative;
+    bottom: 5px;
+}
+.allimg:hover{
+    background-color: orange;
+    color:sandybrown
+}
+
+.allpawn {
+    transform: scale(.7);
+}
+
+.authcont {
+    width: 100vw;
+}
+
+.author {
+    float: right;
+    margin-right: 50px;
+
+}
+
+
+@media (max-width:650px){
+
+    #tog {
+        margin-bottom: 70px;
+
+    }
+
+    .box {
+        width: 11vw;
+        height: 11vw;
+    }
+    .pagebox {
+        width: 33vw;
+        height: 88vw;
+    }
+    .allimg {
+        width: 7vw;
+    }
+}
