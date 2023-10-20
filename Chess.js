@@ -62,10 +62,10 @@ function coloring() {
         aup = eval(arr.shift())
         a = aside + aup
 
-        if (a % 2 != 0) {
+        if (a % 2 == 0) {
             color.style.backgroundColor = '#AE8968'
         }
-        if (a % 2 == 0) {
+        if (a % 2 != 0) {
             color.style.backgroundColor = '#ffecd1'
         }
         // if (a % 2 == 0) {
@@ -107,10 +107,10 @@ function reddish() {
                     aup = eval(arr.shift())
                     a = aside + aup
                     
-                    if (a % 2 != 0 && pinkColor == greenColor) {
+                    if (a % 2 == 0 && pinkColor == greenColor) {
                         i2.style.backgroundColor = '#AE8968'
                     }
-                    if (a % 2 == 0 && pinkColor == greenColor) {
+                    if (a % 2 != 0 && pinkColor == greenColor) {
                         i2.style.backgroundColor = '#ffecd1'
                     }
 
@@ -124,7 +124,7 @@ function reddish() {
 }
 
 
-step=1
+step=0
 tog = 1
 whiteCastleChance=true
 blackCastleChance=true
