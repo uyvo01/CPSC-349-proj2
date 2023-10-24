@@ -14,12 +14,22 @@
 <body>
 
     <h1>Chess</h1>
+    <div class="container">
+        <div>
+            <button onclick="location.reload()">Play</button>
+        </div>
+        <div>
+            <button>Save</button>
+        </div>
+        <div>
+            <button>Resume</button>
+        </div>
+    </div>
+    
 
     <div class="container">
-
         <div>
             <h2 id="tog">White's Turn</h2>
-
             <ul>
                 <div class="divv" id="row0">
                     <li class="letters"></li>
@@ -133,21 +143,15 @@
                     <li class="letters">H</li>
                 </div>
             </ul>
-            </div>
-            <div class="pagebox">
-                <h2>Themes</h2>
-            </div>
-            <div class="pagebox" id="moveRecord">
-                <h2>Page</h2>
-            </div>
         </div>
+        <div class="pagebox">
+            <h2>Themes</h2>
+        </div>
+        <div class="pagebox" id="moveRecord">
+            <h2>Page</h2>
+        </div>
+    </div>
+
     <script src="Chess.js"></script>
 </body>
-
-<script>
-
-
-   
-</script>
-
 </html>

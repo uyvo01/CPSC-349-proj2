@@ -36,12 +36,39 @@ function insertMove(old,newpos) {
     if (side=="W"){
         step +=1;
         moveRecord.innerHTML += `<br \>`;
-        moveRecord.innerHTML += `${step}. ${piece}${col}${row} - `;
+        moveRecord.innerHTML += `${step}. ${piece}${col}${row} : `;
     } else {
-        text= element.charAt(1);
         moveRecord.innerHTML += `${piece}${col}${row} `;
     }
 }
+
+// Inserting kill
+function insertKill(old,newpos) {
+    let side=old.charAt(0);
+    let piece= old.charAt(1).toUpperCase();
+    let col = newpos.charAt(3);
+    col = getCol(col-1);
+    let row = newpos.charAt(1);
+    if (side=="W"){
+        step +=1;
+        moveRecord.innerHTML += `<br \>`;
+        moveRecord.innerHTML += `${step}. ${piece}x${col}${row} : `;
+    } else {
+        moveRecord.innerHTML += `${piece}x${col}${row} `;
+    }
+}
+
+// Inserting castle
+function insertCastle(side,type) {
+    if (side=="W"){
+        step +=1;
+        moveRecord.innerHTML += `<br \>`;
+        moveRecord.innerHTML += `${step}. ${type} : `;
+    } else {
+        moveRecord.innerHTML += `${type}`;
+    }
+}
+
 // get column name
 function getCol(n) {
     const col = "abcdefgh";
@@ -157,9 +184,10 @@ document.querySelectorAll('.box').forEach(item => {
                     coloring()
                     insertImage()
                     tog = tog + 1
-
+                    insertKill(pinkText,item.id)
                 }
             })
+        
         }
 
 
@@ -171,7 +199,6 @@ document.querySelectorAll('.box').forEach(item => {
         arr.push('0')
         aup = eval(arr.join(''))
         a = aside + aup
-
 
 
         // Function to display the available paths for all pieces
@@ -284,7 +311,7 @@ document.querySelectorAll('.box').forEach(item => {
                 
                 if(whiteCastleChance==true && a==105 && document.getElementById('b106').innerText== '' && document.getElementById('b107').innerText== '' && document.getElementById('b108').innerText== 'Wrook'){
                     document.getElementById(`b107`).style.backgroundColor = 'aqua'
-
+  
                 }
                 if(whiteCastleChance==true && a==105 && document.getElementById('b104').innerText== '' && document.getElementById('b103').innerText== '' && document.getElementById('b102').innerText== '' && document.getElementById('b101').innerText== 'Wrook'){
                     document.getElementById(`b103`).style.backgroundColor = 'aqua'
@@ -667,6 +694,7 @@ document.querySelectorAll('.box').forEach(item => {
                             whiteCastleChance=false
                             coloring()
                             insertImage()
+                            insertCastle("W","O-O-O")
                             
                         }
                         else if(item2.id=='b107'){
@@ -678,6 +706,7 @@ document.querySelectorAll('.box').forEach(item => {
                             whiteCastleChance=false
                             coloring()
                             insertImage()
+                            insertCastle("W","O-O")
 
                         }
                         else if(item2.id=='b803'){
@@ -690,7 +719,7 @@ document.querySelectorAll('.box').forEach(item => {
                             blackCastleChance=false
                             coloring()
                             insertImage()
-                            
+                            insertCastle("B","O-O-O")
                         }
                         else if(item2.id=='b807'){
                             document.getElementById('b805').innerText = ''
@@ -701,6 +730,7 @@ document.querySelectorAll('.box').forEach(item => {
                             blackCastleChance=false
                             coloring()
                             insertImage()
+                            insertCastle("B","O-O")
 
                         }
                     }
