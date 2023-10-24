@@ -10,27 +10,25 @@
     
     <title>Chess</title>
 </head>
-
-<body>
-
-    <h1>Chess</h1>
-    <div class="container">
-        <div>
-            <button onclick="location.reload()">Play</button>
-        </div>
-        <div>
-            <button>Save</button>
-        </div>
-        <div>
-            <button>Resume</button>
-        </div>
+<h1>Chess</h1>
+<div class="container">
+    <div>
+        <button onclick="location.reload()">Play</button>
     </div>
+    <div>
+        <button onclick="saveGame()">Save</button>
+    </div>
+    <div>
+        <button onclick="loadGame()">Resume</button>
+    </div>
+</div>
+<div id = "game">
+<body>
     
-
     <div class="container">
         <div>
             <h2 id="tog">White's Turn</h2>
-            <ul>
+
                 <div class="divv" id="row0">
                     <li class="letters"></li>
                     <li class="letters">A</li>
@@ -142,7 +140,7 @@
                     <li class="letters">G</li>
                     <li class="letters">H</li>
                 </div>
-            </ul>
+
         </div>
         <div class="pagebox">
             <h2>Themes</h2>
@@ -153,5 +151,32 @@
     </div>
 
     <script src="Chess.js"></script>
+    <script type="text/javascript">
+    let key = "game";
+    function savePage() {
+        localStorage.setItem("lastStatus", 'home.html');
+    }
+    function loadPage() {
+        const page = localStorage.getItem("lastStatus");
+        const pathname = window.location.pathname;
+        const url = window.location.href.replace(pathname, page);
+        window.location.replace(url);
+    }
+    function saveGame() {
+        let game = document.getElementById("game");
+        // store content to local storage
+        let x = localStorage.setItem(key, game.innerHTML);
+    }
+    function loadGame() {
+        var storedValue = localStorage.getItem(key)
+        alert(storedValue)
+        if (storeValue){
+            let game = document.getElementById("game");
+            game.innerHTML="";
+            game.innerHTML = result;
+        }
+    }
+    </script>
 </body>
+</div>
 </html>
