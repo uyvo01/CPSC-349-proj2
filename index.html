@@ -11,6 +11,7 @@
     <title>Chess</title>
 </head>
 <h1>Chess</h1>
+<body>
 <div class="container">
     <div>
         <button onclick="location.reload()">Play</button>
@@ -22,7 +23,6 @@
         <button onclick="loadGame()">Resume</button>
     </div>
 </div>
-<body>
 <div id = "game">
     <div class="container">
         <div>
@@ -168,7 +168,7 @@
     </div>
 
     <script src="Chess.js"></script>
-    <script type="text/javascript">
+    <script>
     let key = "game";
     function savePage() {
         localStorage.setItem("lastStatus", 'home.html');
