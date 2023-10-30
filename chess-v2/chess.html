@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="chess.css">
+        <title>CHESS: A GAME</title>
+        <div id="turnDisplay" class="whosTurn">Turn: <span id="turnColor"></span></div>
+    </head>
+    
+    <body>
+        <header>
+            <h1>​🇨​​​</h1>
+            <h1>​​🇭​​​</h1>
+            <h1>🇪</h1>
+            <h1>​🇸</h1>
+            <h1>​🇸</h1>
+        </header>
+        <div class="board">
+            
+            <div class="whitesq draggable" data-row=0 data-col=0><div class="black" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
+            <div class="blacksq draggable" data-row=0 data-col=1><div class="black" alt="knight-piece" id = "knight" draggable="true">♞</div></div>
+            <div class="whitesq draggable" data-row=0 data-col=2><div class="black" alt="bishop-piece" id = "bishop" draggable="true">♝</div></div>
+            <div class="blacksq draggable" data-row=0 data-col=3><div class="black" alt="king-piece" id = "king" draggable="true">♚</div></div>
+            <div class="whitesq draggable" data-row=0 data-col=4><div class="black" alt="queen-piece" id = "queen" draggable="true">♛</div></div>
+            <div class="blacksq draggable" data-row=0 data-col=5><div class="black" alt="bishop-piece" id = "bishop" draggable="true">♝</div></div>
+            <div class="whitesq draggable" data-row=0 data-col=6><div class="black" alt="knight-piece" id = "knight" draggable="true">♞</div></div>
+            <div class="blacksq draggable" data-row=0 data-col=7><div class="black" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
+            
+            <div class="blacksq draggable" data-row=1 data-col=0><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=1 data-col=1><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=1 data-col=2><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=1 data-col=3><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=1 data-col=4><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=1 data-col=5><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=1 data-col=6><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=1 data-col=7><div class="black" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            
+            <div class="whitesq draggable" data-row=2 data-col=0><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=2 data-col=1><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=2 data-col=2><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=2 data-col=3><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=2 data-col=4><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=2 data-col=5><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=2 data-col=6><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=2 data-col=7><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=3 data-col=0><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=3 data-col=1><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=3 data-col=2><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=3 data-col=3><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=3 data-col=4><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=3 data-col=5><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=3 data-col=6><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=3 data-col=7><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=4 data-col=0><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=4 data-col=1><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=4 data-col=2><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=4 data-col=3><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=4 data-col=4><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=4 data-col=5><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=4 data-col=6><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=4 data-col=7><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=5 data-col=0><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=5 data-col=1><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=5 data-col=2><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=5 data-col=3><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=5 data-col=4><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=5 data-col=5><div class="square"   draggable="true"></div></div>
+            <div class="blacksq draggable" data-row=5 data-col=6><div class="square"   draggable="true"></div></div>
+            <div class="whitesq draggable" data-row=5 data-col=7><div class="square"   draggable="true"></div></div>
+
+            <div class="whitesq draggable" data-row=6 data-col=0><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=6 data-col=1><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=6 data-col=2><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=6 data-col=3><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=6 data-col=4><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=6 data-col=5><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="whitesq draggable" data-row=6 data-col=6><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+            <div class="blacksq draggable" data-row=6 data-col=7><div class="white" alt="pawn-piece" id = "pawn" draggable="true">♟</div></div>
+
+            <div class="blacksq draggable" data-row=7 data-col=0><div class="white" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
+            <div class="whitesq draggable" data-row=7 data-col=1><div class="white" alt="knight-piece" id = "knight" draggable="true">♞</div></div>
+            <div class="blacksq draggable" data-row=7 data-col=2><div class="white" alt="bishop-piece" id = "bishop" draggable="true">♝</div></div>
+            <div class="whitesq draggable" data-row=7 data-col=3><div class="white" alt="queen-piece" id = "queen" draggable="true">♛</div></div>
+            <div class="blacksq draggable" data-row=7 data-col=4><div class="white" alt="king-piece" id = "king" draggable="true">♚</div></div>
+            <div class="whitesq draggable" data-row=7 data-col=5><div class="white" alt="bishop-piece" id = "bishop" draggable="true">♝</div></div>
+            <div class="blacksq draggable" data-row=7 data-col=6><div class="white" alt="knight-piece" id = "knight" draggable="true">♞</div></div>
+            <div class="whitesq draggable" data-row=7 data-col=7><div class="white" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
+            
+        </div>
+        <header>
+            <h1>🇦</h1>
+            <h1>​🇬​​</h1>
+            <h1>🇦​​</h1>
+            <h1>🇲​​</h1>
+            <h1>🇪</h1>
+        </header>
+        
+
+        <script src="chess.js"></script>
+    </body>
+</html>

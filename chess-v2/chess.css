@@ -1,0 +1,121 @@
+body {
+    display: flex;
+    background-color: green;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    color: white; 
+}
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 80px);
+    grid-template-rows: repeat(8, 80px);
+    color: white; 
+    font-size: 79px;
+}
+.white {
+    color: white;
+    padding: 0;
+}
+.black {
+    color: black;
+    padding: 0;
+}
+.whitesq {
+    background-color: 	rgb(196, 164, 132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.blacksq {
+    background-color: rgb(92, 64, 51);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.whosTurn {
+    position: absolute;
+    top: 0; /* Place it at the top of the containing block (the page) */
+    left: 50%; /* Center it horizontally */
+    transform: translateX(-50%); /* Center it horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 200px;
+    padding: 10px;
+    color: white;
+  }
+
+
+  #turnColor {
+    font-weight: bold;
+    margin-left: 5px; 
+  }
+.highlight {
+    background-color: red;
+    width: 80px; /* Set the width to the size of your square */
+    height: 80px;
+    border: 1px solid black;
+}
+@media screen and (max-width: 1300x) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 10px);
+        grid-template-rows: repeat(8, 10px);
+        color: white; 
+        font-size: 9px;
+    }
+}
+@media screen and (max-width: 570px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 50px);
+        grid-template-rows: repeat(8, 50px);
+        
+        font-size: 49px;
+    }
+}
+@media screen and (max-width: 530px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+        color: white; 
+        font-size: 39px;
+    }
+}
+@media screen and (max-height: 640px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 70px);
+        grid-template-rows: repeat(8, 70px);
+        color: white; 
+        font-size: 69px;
+    }
+}
+@media screen and (max-height: 550px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 60px);
+        grid-template-rows: repeat(8, 60px);
+        color: white; 
+        font-size: 59px;
+    }
+}
+
+@media screen and (max-height: 470px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 50px);
+        grid-template-rows: repeat(8, 50px);
+        color: white; 
+        font-size: 49px;
+    }
+}
+
