@@ -269,7 +269,20 @@ class Knight {
           this.color = color;
   }
   movement(beingDragged, targetX, targetY) {
-
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    if((diffX === 2 && diffY === 1) || (diffX === 1 && diffY === 2)) {
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
+      return true
+    }
+    else {
+      return false
+    }
   }  
 };
 class King {
@@ -281,7 +294,28 @@ class King {
           this.color = color;
   }
   movement(beingDragged, targetX, targetY) {
-
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    
+    if(diffX === 1 && diffY === 0) {
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
+      return true;
+    }
+    else if (diffX === 1 && diffY === 1) {
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
+      return true
+    }
+    else {
+      return false
+    }
   }  
 };
 class Queen {
@@ -291,7 +325,10 @@ class Queen {
           this.color = color;
   }
   movement(beingDragged, targetX, targetY) {
-
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
   }  
 };
 
@@ -369,8 +406,6 @@ function dragEnter (e) {
   if (beingDragged.classList.toString() !== e.target.classList.toString()) {
     e.target.classList.add('highlight');
   }
-  console.log(e.target)
-  console.log(e.currentTarget)
 }
 function dragLeave (e) { 
   e.target.classList.remove('highlight')
@@ -382,12 +417,15 @@ function dragDrop(e) {
   const targetX = targetElement.getAttribute('data-row') - 0;
   const targetY = targetElement.getAttribute('data-col') - 0;
   const dragColor = beingDragged.classList.toString();
+  const targetColor = e.target.classList.toString();
   const startX = beingDragged.parentNode.getAttribute('data-row') - 0;
   const startY = beingDragged.parentNode.getAttribute('data-col') - 0;
   const moveMade = chessboard[startX][startY].movement(beingDragged, targetX, targetY);
-  console.log(e.target.classList.toString())
-  if(moveMade && dragColor !== e.target.classList.toString()) {
-    if (existingPiece && dragColor !== e.target.classList.toString()) {
+
+  console.log(targetColor)
+  console.log(dragColor)
+  if(moveMade && dragColor !== targetColor) {
+    if (existingPiece && dragColor !== targetColor) {
       existingPiece.remove();
       targetElement.append(beingDragged);
     }
@@ -400,6 +438,7 @@ function dragDrop(e) {
     else {
       blackTime += 2;
     }
+    console.log("yes")
     audio.play();
     e.target.classList.remove('highlight');
     switchTurns();
