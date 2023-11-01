@@ -7,16 +7,12 @@ body {
     text-align: center;
 }
 
-h1 {
-    margin-top: 20px;
-    color: white; 
-}
 .board {
     display: grid;
-    grid-template-columns: repeat(8, 80px);
-    grid-template-rows: repeat(8, 80px);
+    grid-template-columns: repeat(8, 75px);
+    grid-template-rows: repeat(8, 75px);
     color: white; 
-    font-size: 79px;
+    font-size: 74px;
 }
 .white {
     color: white;
@@ -38,40 +34,29 @@ h1 {
     justify-content: center;
     align-items: center;
 }
-.whosTurn {
+
+#timer {
     position: absolute;
-    top: 0; /* Place it at the top of the containing block (the page) */
-    left: 50%; /* Center it horizontally */
-    transform: translateX(-50%); /* Center it horizontally */
-    display: flex;
+    top: 30px; /* Adjust this value */
+    left: 50%; 
+    transform: translateX(-50%);
+    display: flexbox;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     width: 200px;
-    padding: 10px;
+    padding: 8px;
     color: white;
-  }
+    font-size: 21px;
+}
 
-
-  #turnColor {
-    font-weight: bold;
-    margin-left: 5px; 
-  }
 .highlight {
     background-color: red;
-    width: 80px; /* Set the width to the size of your square */
+    width: 80px; 
     height: 80px;
     border: 1px solid black;
 }
-@media screen and (max-width: 1300x) {
-    .board {
-        display: grid;
-        grid-template-columns: repeat(8, 10px);
-        grid-template-rows: repeat(8, 10px);
-        color: white; 
-        font-size: 9px;
-    }
-}
+
 @media screen and (max-width: 570px) {
     .board {
         display: grid;
@@ -79,6 +64,10 @@ h1 {
         grid-template-rows: repeat(8, 50px);
         
         font-size: 49px;
+    }
+    .highlight {
+        width: 50px;
+        height: 50px;
     }
 }
 @media screen and (max-width: 530px) {
@@ -89,14 +78,22 @@ h1 {
         color: white; 
         font-size: 39px;
     }
+    .highlight {
+        width: 40px;
+        height: 40px;
+    }
 }
 @media screen and (max-height: 640px) {
     .board {
         display: grid;
-        grid-template-columns: repeat(8, 70px);
-        grid-template-rows: repeat(8, 70px);
+        grid-template-columns: repeat(8, 60px);
+        grid-template-rows: repeat(8, 60px);
         color: white; 
-        font-size: 69px;
+        font-size: 59px;
+    }
+    .highlight {
+        width: 59px;
+        height: 59px;
     }
 }
 @media screen and (max-height: 550px) {
@@ -107,8 +104,11 @@ h1 {
         color: white; 
         font-size: 59px;
     }
+    .highlight {
+        width: 59px;
+        height: 59px;
+    }
 }
-
 @media screen and (max-height: 470px) {
     .board {
         display: grid;
@@ -117,5 +117,8 @@ h1 {
         color: white; 
         font-size: 49px;
     }
+    .highlight {
+        width: 49px;
+        height: 49px;
+    }
 }
-
