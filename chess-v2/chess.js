@@ -26,13 +26,13 @@ function formatTime(totalSeconds) {
 
 function switchTurns() {
   if (whosTurn === "white") {
+    whiteTime += 2;
     whosTurn = "black";
-    
     updateTime();
     
   } else {
+    blackTime += 2;
     whosTurn = "white";
-    
     updateTime();
   }
 }
@@ -235,8 +235,8 @@ class Bishop {
       return false;
     }
     // determine which quadrant your target square is in, top left, top right, bottom left, bottom right
-    let stepX = targetX > this.posX ? 1 : -1;
-    let stepY = targetY > this.posY ? 1 : -1;
+    let stepX = targetX > startX ? 1 : -1;
+    let stepY = targetY > startY ? 1 : -1;
     // make sure there are no pieces in the path of bishop
     for (let i = 1; i < diffX; i++) {
       if (chessboard[startX + i * stepX][startY + i * stepY] !== ePiece) {
@@ -258,10 +258,46 @@ class Rook {
     this.hasMoved = hasMoved;
     this.color = color;
   }
+  // start: 2, 0 end: 2, 2
   movement(beingDragged, targetX, targetY) {
-    
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    console.log(diffX)
+    console.log(diffY)
+    if(diffX && !diffY) {
+
+      let stepX = targetX > startX ? 1 : -1;
+      console.log(stepX)
+      console.log("stepX")
+      for (let i = 1; i < diffX; i++) {
+        if (chessboard[startX + i * stepX][startY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else if (!diffX && diffY){
+      let stepY = targetY > startY ? 1 : -1;
+      console.log(stepY)
+      for (let i = 1; i < diffY; i++) {
+        
+        if (chessboard[startX][startY + i * stepY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else {
+      console.log("we got here")
+      return false
+    }
+    chessboard[startX][startY].posX = targetX
+    chessboard[startX][startY].posY = targetY
+    chessboard[targetX][targetY] = chessboard[startX][startY]
+    chessboard[startX][startY] = ePiece
+    return true
   }
-}
+};
 class Knight {
   constructor(posX, posY, color) {
           this.posX = posX;
@@ -306,6 +342,13 @@ class King {
       chessboard[startX][startY] = ePiece
       return true;
     }
+    else if(diffX === 0 && diffY === 1) {
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
+      return true;
+    }
     else if (diffX === 1 && diffY === 1) {
       chessboard[startX][startY].posX = targetX
       chessboard[startX][startY].posY = targetY
@@ -329,6 +372,46 @@ class Queen {
     let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
     let diffX = Math.abs(targetX - startX);
     let diffY = Math.abs(targetY - startY);
+    if(diffX && !diffY) {
+
+      let stepX = targetX > startX ? 1 : -1;
+      console.log(stepX)
+      console.log("stepX")
+      for (let i = 1; i < diffX; i++) {
+        if (chessboard[startX + i * stepX][startY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else if (diffX === diffY) {
+      let stepX = targetX > startX ? 1 : -1;
+      let stepY = targetY > startY ? 1 : -1;
+      // make sure there are no pieces in the path of bishop
+      for (let i = 1; i < diffX; i++) {
+        if (chessboard[startX + i * stepX][startY + i * stepY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else if (!diffX && diffY){
+      let stepY = targetY > startY ? 1 : -1;
+      console.log(stepY)
+      for (let i = 1; i < diffY; i++) {
+        
+        if (chessboard[startX][startY + i * stepY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else {
+      console.log("we got here")
+      return false
+    }
+    chessboard[startX][startY].posX = targetX
+    chessboard[startX][startY].posY = targetY
+    chessboard[targetX][targetY] = chessboard[startX][startY]
+    chessboard[startX][startY] = ePiece
+    return true
   }  
 };
 
@@ -380,6 +463,24 @@ let chessboard = [
   [wRook1, wKnight1, wBishop1, wQueen, wKing, wBishop2, wKnight2, wRook2],
 ];
 
+const pieces = document.querySelectorAll('.piece');
+
+pieces.forEach(piece => {
+    piece.addEventListener('dragstart', (event) => {
+        // Set the dragged piece's data and style it during the drag
+        event.dataTransfer.setData('text/plain', ''); // Essential for Firefox
+        event.target.style.opacity = '1'; // Ensure full opacity while dragging
+        // Other custom drag behaviors you might want to add
+    });
+
+    piece.addEventListener('dragend', (event) => {
+        // Reset the style of the piece after the drag
+        event.target.style.opacity = '1'; // Set back to 100% opacity
+        // Other actions after the drag ends
+    });
+});
+
+
 const squares = document.querySelectorAll('.draggable')
 
 squares.forEach(square => {
@@ -394,6 +495,9 @@ let beingDragged;
 function dragStart(e) {
     if (e.target.classList.toString() === whosTurn) {
       beingDragged = e.target;
+      console.log(beingDragged)
+      e.stopPropagation();
+      beingDragged.parentNode.style.opacity = '1';
     }
     else {
       e.preventDefault();
@@ -432,13 +536,6 @@ function dragDrop(e) {
     else if(!existingPiece) {
       targetElement.append(beingDragged);
     }
-    if (whosTurn === "white") {
-      whiteTime += 2;
-    }
-    else {
-      blackTime += 2;
-    }
-    console.log("yes")
     audio.play();
     e.target.classList.remove('highlight');
     switchTurns();
