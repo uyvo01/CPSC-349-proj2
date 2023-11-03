@@ -5,14 +5,26 @@
         <title>CHESS: A GAME</title>
     </head>
     <body>
-            <div id="timer"></div>
+    <main>
+        <div class="container">
+            <div>
+                <button onclick="location.reload()">Refresh</button>
+            </div>
+            <div>
+                <button onclick="saveGame()">Save</button>
+            </div>
+            <div>
+                <button onclick="loadGame()">Resume</button>
+            </div>
+        </div>
+        <div id="timer"></div>
         <div class="board">
             
             <div class="whitesq draggable" data-row=0 data-col=0><div class="black" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
             <div class="blacksq draggable" data-row=0 data-col=1><div class="black" alt="knight-piece" id = "knight" draggable="true">♞</div></div>
             <div class="whitesq draggable" data-row=0 data-col=2><div class="black" alt="bishop-piece" id = "bishop" draggable="true">♝</div></div>
-            <div class="blacksq draggable" data-row=0 data-col=3><div class="black" alt="king-piece" id = "king" draggable="true">♚</div></div>
-            <div class="whitesq draggable" data-row=0 data-col=4><div class="black" alt="queen-piece" id = "queen" draggable="true">♛</div></div>
+            <div class="blacksq draggable" data-row=0 data-col=3><div class="black" alt="queen-piece" id = "queen" draggable="true">♛</div></div>
+            <div class="whitesq draggable" data-row=0 data-col=4><div class="black" alt="king-piece" id = "king" draggable="true">♚</div></div>
             <div class="blacksq draggable" data-row=0 data-col=5><div class="black" alt="bishop-piece" id = "bishop" draggable="true">♝</div></div>
             <div class="whitesq draggable" data-row=0 data-col=6><div class="black" alt="knight-piece" id = "knight" draggable="true">♞</div></div>
             <div class="blacksq draggable" data-row=0 data-col=7><div class="black" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
@@ -78,6 +90,27 @@
             <div class="whitesq draggable" data-row=7 data-col=7><div class="white" alt="castle-piece" id = "castle" draggable="true">♜</div></div>
             
         </div>
+
         <script src="chess.js"></script>
+        <script>
+            let key = "game";
+            function saveGame() {
+                const main = document.querySelector("main");
+                // store content to local storage
+                let x = localStorage.setItem(key, main.innerHTML);
+                var storedValue = localStorage.getItem(key)
+                console.log(storedValue);
+            }
+            function loadGame() {
+                var storedValue = localStorage.getItem(key)
+                console.log(storedValue);
+                if (storedValue){
+                    const game = document.querySelector("main");
+                    game.innerHTML="";
+                    game.innerHTML = storedValue;
+                }
+            }
+            </script>
+    </main>
     </body>
 </html>
