@@ -327,7 +327,8 @@ class King {
     let diffX = Math.abs(targetX - startX);
     let diffY = Math.abs(targetY - startY);
     const colorMatch = beingDragged.classList.contains(chessboard[targetX][targetY].color);
-    
+    console.log(startX) 
+    console.log(startY)
     if(diffX === 1 && diffY === 0 && !colorMatch) {
      
       return true;
@@ -342,9 +343,50 @@ class King {
      
       return true
     }
-   
+    
+    else if (diffX === 0 && diffY === 2 
+      && (chessboard[startX][startY + 3] instanceof Rook && !chessboard[startX][startY + 3].hasMoved)
+      && chessboard[startX][startY + 1] === ePiece && chessboard[startX][startY + 2] === ePiece){
+        const changedSquare = document.querySelector(`[data-row="${startX}"][data-col="${startY + 3}"]`)
+        const squareToChange = document.querySelector(`[data-row="${startX}"][data-col="${startY + 1}"]`);
+
+        if (whosTurn === 'black') {
+          changedSquare.innerHTML = `<div class="${chessboard[startX][startY].color}" draggable="true"></div>`;
+          squareToChange.innerHTML = `<div class="${chessboard[startX][startY].color}"  id="white-piece" draggable="true">♜</div>`;
+        } else {
+          changedSquare.innerHTML = `<div class="${chessboard[startX][startY].color}" alt="castle-piece" id="white-piece" draggable="true"></div>`;
+          squareToChange.innerHTML = `<div class="${chessboard[startX][startY].color}" id="white-piece" alt="castle-piece" draggable="true">♜</div>`;
+        }
+        chessboard[startX][startY + 1] = chessboard[startX][startY + 3]
+        chessboard[startX][startY + 3] = ePiece
+        chessboard[startX][startY + 1].hasMoved = true
+        chessboard[startX][startY + 1].posY = 5
+        return true
+      }
+      else if (diffX === 0 && diffY === 2 
+        && (chessboard[startX][startY - 4] instanceof Rook && !chessboard[startX][startY - 4].hasMoved)
+        && chessboard[startX][startY - 1] === ePiece && chessboard[startX][startY - 2] === ePiece && chessboard[startX][startY - 3] === ePiece){
+          const changedSquare = document.querySelector(`[data-row="${startX}"][data-col="${startY - 4}"]`)
+          const squareToChange = document.querySelector(`[data-row="${startX}"][data-col="${startY - 1}"]`);
+  
+          if (whosTurn === 'black') {
+            changedSquare.innerHTML = `<div class="${chessboard[startX][startY].color}" draggable="true"></div>`;
+            squareToChange.innerHTML = `<div class="${chessboard[startX][startY].color}"  id="white-piece" draggable="true">♜</div>`;
+          } else {
+            changedSquare.innerHTML = `<div class="${chessboard[startX][startY].color}" alt="castle-piece" id="white-piece" draggable="true"></div>`;
+            squareToChange.innerHTML = `<div class="${chessboard[startX][startY].color}" id="white-piece" alt="castle-piece" draggable="true">♜</div>`;
+          }
+          chessboard[startX][startY - 1] = chessboard[startX][startY - 4]
+          chessboard[startX][startY - 4] = ePiece
+          chessboard[startX][startY - 1].hasMoved = true
+          chessboard[startX][startY - 1].posY = 3
+          return true
+        }
+        
    
     else {
+      console.log(chessboard)
+      console.log(chessboard[startX][startY + 3] instanceof Rook)
       return false
     }
   }  
@@ -657,6 +699,7 @@ function dragDrop(e) {
   const moveMade = chessboard[startX][startY].movement(beingDragged, targetX, targetY);
 
   if(moveMade && dragColor !== targetColor) {
+    
     if (existingPiece) {
       existingPiece.remove();
       targetElement.append(beingDragged);
@@ -682,5 +725,7 @@ function dragDrop(e) {
   else {
     e.target.classList.remove('highlight');
   } 
+  console.log(chessboard)
 }
+ 
  
