@@ -1,759 +1,686 @@
-// Inserting the Images
-function insertImage() {
+//import "pieces.js";
+let whiteCheck = false
+let blackCheck = false
 
-    document.querySelectorAll('.box').forEach(image => {
+let whosTurn = "white"
+let whiteTime = 181;
+let blackTime = 180; 
 
-        if (image.innerText.length !== 0) {
-            if (image.innerText == 'Wpawn' || image.innerText == 'Bpawn') {
-                image.innerHTML = `${image.innerText} <img class='allimg allpawn' src="images/2d/${image.innerText}.png" alt="">`
-                image.style.cursor = 'pointer'
+let pieceMovement = []
+const audio = new Audio('move_sound.wav');
 
-            }
+let timerElement = document.getElementById('timer');
 
-            else {
 
-                image.innerHTML = `${image.innerText} <img class='allimg' src="images/2d/${image.innerText}.png" alt="">`
-                image.style.cursor = 'pointer'
-            }
-        }
-    })
-}
-insertImage()
-
-// Inserting movement
-function insertMove(old,newpos) {
+function updateTime() {
+  if(whosTurn === "white") {
+    timerElement.textContent = `White's Turn: ${formatTime(whiteTime)}`;
+    timerElement.title=whiteTime;
+    if (whiteTime === 0) {
+      alert("Black Wins");
+      location.reload();
+    }
     
-    element=document.getElementById(old).innerText;
-    let side= element.charAt(0);
-    let piece= element.charAt(1).toUpperCase();
-    if (piece=="P"){
-        piece="";
+  }
+  else {
+    timerElement.textContent = `Black's Turn: ${formatTime(blackTime)}`;
+    timerElement.title=blackTime;
+    if (blackTime === 0) {
+      alert("White Wins")
+      location.reload();
     }
-    let col = newpos.charAt(3);
-    col = getCol(col-1);
-    let row = newpos.charAt(1);
+  }
 
-    if (side=="W"){
-        step +=1;
-        moveRecord.innerHTML += `<br \>`;
-        moveRecord.innerHTML += `${step}. ${piece}${col}${row} : `;
-    } else {
-        moveRecord.innerHTML += `${piece}${col}${row} `;
+}
+
+function formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function switchTurns() {
+
+  if (whosTurn === "white") {
+    whiteTime += 2;
+    whosTurn = "black";
+    updateTime();
+    
+  } else {
+    blackTime += 2;
+    whosTurn = "white";
+    updateTime();
+  }
+}
+setInterval(() => {
+  if (whosTurn === 'white') {
+      whiteTime--;
+  } else {
+      blackTime--;
+  }
+ 
+  updateTime();
+}, 1000);
+function pawnEvolution(beingDragged, targetX, targetY) {
+  let dragColor = beingDragged.classList.toString();
+  const piece = prompt(
+    "Choose a piece to replace the pawn:\nQueen, Rook, Bishop, or Knight"
+  );
+  if (piece) {
+    switch (piece.toLowerCase()) {
+      case "queen":
+        beingDragged.innerHTML = "♛"; 
+        chessboard[targetX][targetY] = new Queen(targetX, targetY, dragColor);
+        beingDragged.id = "queen"
+        break;
+      case "rook":
+        beingDragged.textContent = "♜";
+        chessboard[targetX][targetY] = new Rook(targetX, targetY, true, dragColor);
+        beingDragged.id = "rook"
+        break;
+      case "bishop":
+        beingDragged.textContent = "♝";
+        chessboard[targetX][targetY] = new Bishop(targetX, targetY, dragColor);
+        beingDragged.id = "bishop"
+        break;
+      case "knight":
+        beingDragged.textContent = "♞";
+        chessboard[targetX][targetY] = new Knight(targetX, targetY, dragColor);
+        beingDragged.id = "knight"
+        break;
+      default:
+        alert("Invalid choice. Please select again.");
+        pawnEvolution(beingDragged, targetX, targetY);
     }
+  }
+  else {
+    pawnEvolution(beingDragged, targetX, targetY);
+  }
 }
 
-// Inserting kill
-function insertKill(old,newpos) {
-    let side=old.charAt(0);
-    let piece= old.charAt(1).toUpperCase();
-    let col = newpos.charAt(3);
-    col = getCol(col-1);
-    let row = newpos.charAt(1);
-    if (side=="W"){
-        step +=1;
-        moveRecord.innerHTML += `<br \>`;
-        moveRecord.innerHTML += `${step}. ${piece}x${col}${row} : `;
-    } else {
-        moveRecord.innerHTML += `${piece}x${col}${row} `;
-    }
+class emptyPiece {
+  constructor() {
+
+  }
+  movement() {
+    return false;
+  }
 }
+class Pawn {
+  constructor(posX, posY, 
+    hasMoved, color) {
+          this.posX = posX;
+          this.posY = posY;
+          this.hasMoved = hasMoved;
+          this.color = color;
+  }
+  pawnPassant() {
 
-// Inserting castle
-function insertCastle(side,type) {
-    if (side=="W"){
-        step +=1;
-        moveRecord.innerHTML += `<br \>`;
-        moveRecord.innerHTML += `${step}. ${type} : `;
-    } else {
-        moveRecord.innerHTML += `${type}`;
-    }
-}
+  }
+      movement(beingDragged, targetX, targetY) {
+          
+          let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+          let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+          let dragColor = beingDragged.classList.toString();
+          if (targetX === startX) {
+            return false;
+          }
+          if (dragColor === 'black') {
 
-// get column name
-function getCol(n) {
-    const col = "abcdefgh";
-     return col.charAt(n);
-}
+            if (!chessboard[startX][startY].hasMoved) {
+              //black chess pawn that has not moved moves forward or takes a piece
+              if ((startX + 1 === targetX && startY === targetY && chessboard[targetX][targetY] === ePiece
+              || ((Math.abs(startY - targetY) === 1 && chessboard[targetX][targetY] !== ePiece && (Math.abs(startX - targetX) === 1)))) 
+              || (startX + 2 === targetX && startY === targetY 
+              && chessboard[startX + 1][startY] === ePiece
+              && chessboard[startX + 2][startY] === ePiece))
 
-//Coloring
-
-function coloring() {
-    const color = document.querySelectorAll('.box')
-
-    color.forEach(color => {
-
-        getId = color.id
-        arr = Array.from(getId)
-        arr.shift()
-        aside = eval(arr.pop())
-        aup = eval(arr.shift())
-        a = aside + aup
-
-        if (a % 2 == 0) {
-            color.style.backgroundColor = '#AE8968'
-        }
-        if (a % 2 != 0) {
-            color.style.backgroundColor = '#ffecd1'
-        }
-        // if (a % 2 == 0) {
-        //     color.style.backgroundColor = 'seagreen'
-        // }
-        // if (a % 2 !== 0) {
-        //     color.style.backgroundColor = 'lime'
-        // }
-
-    })
-}
-coloring()
-
-
-
-
-//function to not remove the same team element
-
-function reddish() {
-    document.querySelectorAll('.box').forEach(i1 => {
-        if (i1.style.backgroundColor == 'pink') {
-
-            document.querySelectorAll('.box').forEach(i2 => {
-
-                if (i2.style.backgroundColor == 'green' && i2.innerText.length !== 0) {
-
-
-                    greenText = i2.innerText
-
-                    pinkText = i1.innerText
-
-                    pinkColor = ((Array.from(pinkText)).shift()).toString()
-                    greenColor = ((Array.from(greenText)).shift()).toString()
-
-                    getId = i2.id
-                    arr = Array.from(getId)
-                    arr.shift()
-                    aside = eval(arr.pop())
-                    aup = eval(arr.shift())
-                    a = aside + aup
-                    
-                    if (a % 2 == 0 && pinkColor == greenColor) {
-                        i2.style.backgroundColor = '#AE8968'
-                    }
-                    if (a % 2 != 0 && pinkColor == greenColor) {
-                        i2.style.backgroundColor = '#ffecd1'
-                    }
-
-                    // if (pinkColor == greenColor) {
-                    //     i2.style.backgroundColor = 'rgb(253, 60, 60)'
-                    // }
-                }
-            })
-        }
-    })
-}
-
-
-step=0
-tog = 1
-whiteCastleChance=true
-blackCastleChance=true
-moveRecord=document.getElementById("moveRecord");
-
-document.querySelectorAll('.box').forEach(item => {
-
-
-
-    item.addEventListener('click', function () {
-
-        // To delete the opposite element
-
-        if (item.style.backgroundColor == 'green' && item.innerText.length == 0) {
-            tog = tog + 1
-        }
-        else if (item.style.backgroundColor == 'aqua' && item.innerText.length == 0) {
-            tog = tog + 1
-        }
-
-        else if (item.style.backgroundColor == 'green' && item.innerText.length !== 0) {
-
-            document.querySelectorAll('.box').forEach(i => {
-                if (i.style.backgroundColor == 'pink') {
-                    pinkId = i.id
-                    pinkText = i.innerText
-
-                    document.getElementById(pinkId).innerText = ''
-                    item.innerText = pinkText
-                    coloring()
-                    insertImage()
-                    tog = tog + 1
-                    insertKill(pinkText,item.id)
-                }
-            })
-        
-        }
-
-
-
-        getId = item.id
-        arr = Array.from(getId)
-        arr.shift()
-        aside = eval(arr.pop())
-        arr.push('0')
-        aup = eval(arr.join(''))
-        a = aside + aup
-
-
-        // Function to display the available paths for all pieces
-
-        function whosTurn(toggle) {
-
-            // PAWN
-
-            if (item.innerText == `${toggle}pawn`) {
-                item.style.backgroundColor = 'pink'
-
-                if (tog % 2 !== 0 && aup < 800) {
-
-                    if (aup == 200 && document.getElementById(`b${a + 100}`).innerText.length == 0) {
-                        document.getElementById(`b${a + 100}`).style.backgroundColor = 'green'
-                        if (aup == 200 && document.getElementById(`b${a + 200}`).innerText.length == 0) {
-                            document.getElementById(`b${a + 200}`).style.backgroundColor = 'green'
-                        }
-                    }
-
-                    if (aup !== 200 && document.getElementById(`b${a + 100}`).innerText.length == 0) {
-                        document.getElementById(`b${a + 100}`).style.backgroundColor = 'green'
-                    }
-
-                    if (aside < 8 && document.getElementById(`b${a + 100 + 1}`).innerText.length !== 0) {
-                        document.getElementById(`b${a + 100 + 1}`).style.backgroundColor = 'green'
-                    }
-
-                    if (aside > 1 && document.getElementById(`b${a + 100 - 1}`).innerText.length !== 0) {
-                        document.getElementById(`b${a + 100 - 1}`).style.backgroundColor = 'green'
-
-                    }
-                    // if (aup == 800) {
-                    //     document.getElementById(`b${a}`).innerText = 'Wqueen'
-                    //     coloring()
-                    //     insertImage()
-                    // }
-                    // if (aside < 8 && document.getElementById(`b${a + 100 + 1}`).innerText.length == 0 && document.getElementById(`b${a + 100}`).innerText.length == 0) {
-                    //     document.getElementById(`b${a + 100}`).style.backgroundColor = 'green'
-                    // }
-
-                    // if (aside > 1 && document.getElementById(`b${a + 100 - 1}`).innerText.length == 0 && document.getElementById(`b${a + 100}`).innerText.length == 0) {
-                    //     document.getElementById(`b${a + 100}`).style.backgroundColor = 'green'
-
-                    // }
-                }
-
-                if (tog % 2 == 0 && aup > 100) {
-
-                    if (aup == 700 && document.getElementById(`b${a - 100}`).innerText.length == 0) {
-                        document.getElementById(`b${a - 100}`).style.backgroundColor = 'green'
-                        if (aup == 700 && document.getElementById(`b${a - 200}`).innerText.length == 0) {
-                            document.getElementById(`b${a - 200}`).style.backgroundColor = 'green'
-                        }
-                    }
-
-                    if (aup !== 700 && document.getElementById(`b${a - 100}`).innerText.length == 0) {
-                        document.getElementById(`b${a - 100}`).style.backgroundColor = 'green'
-                    }
-                    if (aside < 8 && document.getElementById(`b${a - 100 + 1}`).innerText.length !== 0) {
-                        document.getElementById(`b${a - 100 + 1}`).style.backgroundColor = 'green'
-                    }
-                    if (aside > 1 && document.getElementById(`b${a - 100 - 1}`).innerText.length !== 0) {
-                        document.getElementById(`b${a - 100 - 1}`).style.backgroundColor = 'green'
-
-                    }
-                }
-
-
+              {
+                console.log("hi buddy")
+                // update chessboard array
+                chessboard[startX][startY].hasMoved = true
+            
+                return true
+              }
+              //invalid move
+              else {
+                return false
+              }
             }
-
-            // KING
-
-            if (item.innerText == `${toggle}king`) {
-
-
-                if (aside < 8) {
-                    document.getElementById(`b${a + 1}`).style.backgroundColor = 'green'
-
+            else {
+              //black piece that has moved before moves forward
+              if(startX + 1 === targetX && targetY === startY 
+                && chessboard[targetX][targetY] === ePiece) {
+                  console.log("hi buddy")
+                if(targetX === 7) {
+                  pawnEvolution(beingDragged, targetX, targetY)
                 }
-                if (aside > 1) {
-
-                    document.getElementById(`b${a - 1}`).style.backgroundColor = 'green'
-                }
-                if (aup < 800) {
-
-                    document.getElementById(`b${a + 100}`).style.backgroundColor = 'green'
-                }
-                if (aup > 100) {
-
-                    document.getElementById(`b${a - 100}`).style.backgroundColor = 'green'
-                }
-
-                if (aup > 100 && aside < 8) {
-
-                    document.getElementById(`b${a - 100 + 1}`).style.backgroundColor = 'green'
-                }
-                if (aup > 100 && aside > 1) {
-
-                    document.getElementById(`b${a - 100 - 1}`).style.backgroundColor = 'green'
-                }
-                if (aup < 800 && aside < 8) {
-
-                    document.getElementById(`b${a + 100 + 1}`).style.backgroundColor = 'green'
-                }
-                if (aup < 800 && aside > 1) {
-
-                    document.getElementById(`b${a + 100 - 1}`).style.backgroundColor = 'green'
-                }
+                return true
+              }
+              // black pawn that has moved takes a piece
+              else if ((startX + 1 === targetX && Math.abs(startY - targetY) === 1) 
+              && chessboard[targetX][targetY].color !== dragColor 
+              && chessboard[targetX][targetY] !== ePiece) {
                 
-                if(whiteCastleChance==true && a==105 && document.getElementById('b106').innerText== '' && document.getElementById('b107').innerText== '' && document.getElementById('b108').innerText== 'Wrook'){
-                    document.getElementById(`b107`).style.backgroundColor = 'aqua'
+                if(targetX === 7) {
+                  pawnEvolution(beingDragged, targetX, targetY)
+                }
+                return true
+            }
+            else {
+              return false
+            }
+          }
+          }
+          else if (dragColor === 'white'){
+            if(!chessboard[startX][startY].hasMoved) {
+              // white piece that hasnt moved moves forward or takes a piece
+              if((startX - 1 === targetX && startY === targetY && chessboard[targetX][targetY] === ePiece
+                || ((Math.abs(startY - targetY) === 1 && chessboard[targetX][targetY] !== ePiece && (Math.abs(startX - targetX) === 1)))) 
+                || (startX - 2 === targetX && startY === targetY 
+                && chessboard[startX - 1][startY] === ePiece
+                && chessboard[startX - 2][startY] === ePiece)) {
+                
+                chessboard[startX][startY].hasMoved = true
+            
+                return true
+              }
+              else {
+                return false
+              }
+            }
+            else {
+              //white piece that has moved moves forward
+              if(startX - 1 === targetX && targetY === startY && chessboard[targetX][targetY] === ePiece) {
+                
+            
+                if(targetX === 0) {
+                  pawnEvolution(beingDragged, targetX, targetY)
+                }
+                return true
+              }
+              //white piece that has moved takes another piece
+              else if (startX - 1 === targetX && Math.abs(startY - targetY) === 1 
+              && chessboard[targetX][targetY].color !== dragColor
+              && chessboard[targetX][targetY] !== ePiece) {
+                
+               
+                
+                if(targetX === 0) {
+                  pawnEvolution(beingDragged, targetX, targetY)
+                }
+                return true
+              }
+              else {
+                return false
+              }
+            }
+          }
+      }
+}
+class Bishop {
+  constructor(posX, posY, color) {
+          this.posX = posX;
+          this.posY = posY;
+          this.color = color;
+  }
+  movement(beingDragged, targetX, targetY) {
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    // if target square is not diagonal
+    if (diffX !== diffY) {
+      return false;
+    }
+    // determine which quadrant your target square is in, top left, top right, bottom left, bottom right
+    let stepX = targetX > startX ? 1 : -1;
+    let stepY = targetY > startY ? 1 : -1;
+    // make sure there are no pieces in the path of bishop
+    for (let i = 1; i < diffX; i++) {
+      if (chessboard[startX + i * stepX][startY + i * stepY] !== ePiece) {
+        return false;
+      }
+    }
+    //update chessboard array
   
-                }
-                if(whiteCastleChance==true && a==105 && document.getElementById('b104').innerText== '' && document.getElementById('b103').innerText== '' && document.getElementById('b102').innerText== '' && document.getElementById('b101').innerText== 'Wrook'){
-                    document.getElementById(`b103`).style.backgroundColor = 'aqua'
-
-                }
-                if(blackCastleChance==true && a==805 && document.getElementById('b806').innerText== '' && document.getElementById('b807').innerText== '' && document.getElementById('b808').innerText== 'Brook'){
-                    document.getElementById(`b807`).style.backgroundColor = 'aqua'
-
-                }
-                if(blackCastleChance==true && a==805 && document.getElementById('b804').innerText== '' && document.getElementById('b803').innerText== '' && document.getElementById('b802').innerText== '' && document.getElementById('b801').innerText== 'Brook'){
-                    document.getElementById(`b803`).style.backgroundColor = 'aqua'
-
-                }
-
-                item.style.backgroundColor = 'pink'
-
-            }
-
-
-            // ROOK
-
-            if (item.innerText == `${toggle}rook`) {
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a + i * 100) < 900 && document.getElementById(`b${a + i * 100}`).innerText == 0) {
-                        document.getElementById(`b${a + i * 100}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a + i * 100) < 900 && document.getElementById(`b${a + i * 100}`).innerText !== 0) {
-                        document.getElementById(`b${a + i * 100}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a - i * 100) > 100 && document.getElementById(`b${a - i * 100}`).innerText == 0) {
-                        document.getElementById(`b${a - i * 100}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a - i * 100) > 100 && document.getElementById(`b${a - i * 100}`).innerText !== 0) {
-                        document.getElementById(`b${a - i * 100}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a + i) < (aup + 9) && document.getElementById(`b${a + i}`).innerText == 0) {
-                        document.getElementById(`b${a + i}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a + i) < (aup + 9) && document.getElementById(`b${a + i}`).innerText !== 0) {
-                        document.getElementById(`b${a + i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a - i) > (aup) && document.getElementById(`b${a - i}`).innerText == 0) {
-                        document.getElementById(`b${a - i}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a - i) > (aup) && document.getElementById(`b${a - i}`).innerText !== 0) {
-                        document.getElementById(`b${a - i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                item.style.backgroundColor = 'pink'
-            }
-
-
-
-            // BISHOP
-
-            if (item.innerText == `${toggle}bishop`) {
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < (900 - aup) / 100 && i < 9 - aside && document.getElementById(`b${a + i * 100 + i}`).innerText.length == 0) {
-                        document.getElementById(`b${a + i * 100 + i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < (900 - aup) / 100 && i < 9 - aside && document.getElementById(`b${a + i * 100 + i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a + i * 100 + i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < aup / 100 && i < 9 - aside && document.getElementById(`b${a - i * 100 + i}`).innerText.length == 0) {
-                        document.getElementById(`b${a - i * 100 + i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < aup / 100 && i < 9 - aside && document.getElementById(`b${a - i * 100 + i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a - i * 100 + i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < (900 - aup) / 100 && i < aside && document.getElementById(`b${a + i * 100 - i}`).innerText.length == 0) {
-                        document.getElementById(`b${a + i * 100 - i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < (900 - aup) / 100 && i < aside && document.getElementById(`b${a + i * 100 - i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a + i * 100 - i}`).style.backgroundColor = 'green'
-                        break
-                    }
-
-                }
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < aup / 100 && i < aside && document.getElementById(`b${a - i * 100 - i}`).innerText.length == 0) {
-                        document.getElementById(`b${a - i * 100 - i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < aup / 100 && i < aside && document.getElementById(`b${a - i * 100 - i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a - i * 100 - i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-
-                item.style.backgroundColor = 'pink'
-
-            }
-
-
-
-            // QUEEN
-
-            if (item.innerText == `${toggle}queen`) {
-
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a + i * 100) < 900 && document.getElementById(`b${a + i * 100}`).innerText == 0) {
-                        document.getElementById(`b${a + i * 100}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a + i * 100) < 900 && document.getElementById(`b${a + i * 100}`).innerText !== 0) {
-                        document.getElementById(`b${a + i * 100}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a - i * 100) > 100 && document.getElementById(`b${a - i * 100}`).innerText == 0) {
-                        document.getElementById(`b${a - i * 100}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a - i * 100) > 100 && document.getElementById(`b${a - i * 100}`).innerText !== 0) {
-                        document.getElementById(`b${a - i * 100}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a + i) < (aup + 9) && document.getElementById(`b${a + i}`).innerText == 0) {
-                        document.getElementById(`b${a + i}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a + i) < (aup + 9) && document.getElementById(`b${a + i}`).innerText !== 0) {
-                        document.getElementById(`b${a + i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-                for (let i = 1; i < 9; i++) {
-
-                    if ((a - i) > (aup) && document.getElementById(`b${a - i}`).innerText == 0) {
-                        document.getElementById(`b${a - i}`).style.backgroundColor = 'green'
-                    }
-                    else if ((a - i) > (aup) && document.getElementById(`b${a - i}`).innerText !== 0) {
-                        document.getElementById(`b${a - i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < (900 - aup) / 100 && i < 9 - aside && document.getElementById(`b${a + i * 100 + i}`).innerText.length == 0) {
-                        document.getElementById(`b${a + i * 100 + i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < (900 - aup) / 100 && i < 9 - aside && document.getElementById(`b${a + i * 100 + i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a + i * 100 + i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < aup / 100 && i < 9 - aside && document.getElementById(`b${a - i * 100 + i}`).innerText.length == 0) {
-                        document.getElementById(`b${a - i * 100 + i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < aup / 100 && i < 9 - aside && document.getElementById(`b${a - i * 100 + i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a - i * 100 + i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < (900 - aup) / 100 && i < aside && document.getElementById(`b${a + i * 100 - i}`).innerText.length == 0) {
-                        document.getElementById(`b${a + i * 100 - i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < (900 - aup) / 100 && i < aside && document.getElementById(`b${a + i * 100 - i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a + i * 100 - i}`).style.backgroundColor = 'green'
-                        break
-                    }
-
-                }
-
-
-                for (let i = 1; i < 9; i++) {
-                    if (i < aup / 100 && i < aside && document.getElementById(`b${a - i * 100 - i}`).innerText.length == 0) {
-                        document.getElementById(`b${a - i * 100 - i}`).style.backgroundColor = 'green'
-                    }
-                    else if (i < aup / 100 && i < aside && document.getElementById(`b${a - i * 100 - i}`).innerText.length !== 0) {
-                        document.getElementById(`b${a - i * 100 - i}`).style.backgroundColor = 'green'
-                        break
-                    }
-                }
-
-
-
-                item.style.backgroundColor = 'pink'
-
-            }
-
-            // KNIGHT
-
-            if (item.innerText == `${toggle}knight`) {
-
-
-                if (aside < 7 && aup < 800) {
-                    document.getElementById(`b${a + 100 + 2}`).style.backgroundColor = 'green'
-                }
-                if (aside < 7 && aup > 200) {
-                    document.getElementById(`b${a - 100 + 2}`).style.backgroundColor = 'green'
-                }
-                if (aside < 8 && aup < 700) {
-                    document.getElementById(`b${a + 200 + 1}`).style.backgroundColor = 'green'
-                }
-                if (aside > 1 && aup < 700) {
-                    document.getElementById(`b${a + 200 - 1}`).style.backgroundColor = 'green'
-                }
-                if (aside > 2 && aup < 800) {
-                    document.getElementById(`b${a - 2 + 100}`).style.backgroundColor = 'green'
-                }
-                if (aside > 2 && aup > 100) {
-                    document.getElementById(`b${a - 2 - 100}`).style.backgroundColor = 'green'
-                }
-                if (aside < 8 && aup > 200) {
-                    document.getElementById(`b${a - 200 + 1}`).style.backgroundColor = 'green'
-                }
-                if (aside > 1 && aup > 200) {
-                    document.getElementById(`b${a - 200 - 1}`).style.backgroundColor = 'green'
-                }
-
-                item.style.backgroundColor = 'pink'
-
-            }
+    return true;
+  }
+};
+class Rook {
+  constructor(posX, posY, hasMoved, color) {
+    this.posX = posX;
+    this.posY = posY;
+    this.hasMoved = hasMoved;
+    this.color = color;
+  }
+  // start: 2, 0 end: 2, 2
+  movement(beingDragged, targetX, targetY) {
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    
+    if(diffX && !diffY) {
+
+      let stepX = targetX > startX ? 1 : -1;
+      
+      for (let i = 1; i < diffX; i++) {
+        if (chessboard[startX + i * stepX][startY] !== ePiece) {
+          return false;
         }
-
-
-        // Toggling the turn
-
-        if (tog % 2 !== 0) {
-            document.getElementById('tog').innerText = "White's Turn"
-            whosTurn('W')
+      }
+    }
+    else if (!diffX && diffY){
+      let stepY = targetY > startY ? 1 : -1;
+      
+      for (let i = 1; i < diffY; i++) {
+        
+        if (chessboard[startX][startY + i * stepY] !== ePiece) {
+          return false;
         }
-        if (tog % 2 == 0) {
-            document.getElementById('tog').innerText = "Black's Turn"
-            whosTurn('B')
+      }
+    }
+    else {
+      
+      return false
+    }
+  
+    return true
+  }
+};
+class Knight {
+  constructor(posX, posY, color) {
+          this.posX = posX;
+          this.posY = posY;
+          this.color = color;
+  }
+  movement(beingDragged, targetX, targetY) {
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    const dragColor = beingDragged.classList.toString();
+    if(((diffX === 2 && diffY === 1) || (diffX === 1 && diffY === 2))
+      && chessboard[targetX][targetY].color !== dragColor) {
+      
+     
+      return true
+    }
+    else {
+      return false
+    }
+  }  
+};
+class King {
+  constructor(posX, posY, hasMoved,
+      color) {
+          this.posX = posX;
+          this.posY = posY;
+          this.hasMoved = hasMoved;
+          this.color = color;
+  }
+  movement(beingDragged, targetX, targetY) {
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    
+    let diffX = Math.abs(targetX - startX);
+    let diffY = Math.abs(targetY - startY);
+    const colorMatch = beingDragged.classList.contains(chessboard[targetX][targetY].color);
+    
+    if(diffX === 1 && diffY === 0 && !colorMatch) {
+     
+      return true;
+    }
+    else if(diffX === 0 && diffY === 1
+      && !colorMatch) {
+      
+      console.log("its here1")
+      return true;
+    }
+    else if (diffX === 1 && diffY === 1 && !colorMatch) {
+     
+      return true
+    }
+   
+   
+    else {
+      return false
+    }
+  }  
+};
+class Queen {
+  constructor(posX, posY, color) {
+          this.posX = posX;
+          this.posY = posY;
+          this.color = color;
+  }
+  movement(beingDragged, targetX, targetY) {
+    let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+    let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    let diffX = Math.abs(targetX - startX); 
+    let diffY = Math.abs(targetY - startY);
+    if(diffX && !diffY) {
+      let stepX = targetX > startX ? 1 : -1;
+      for (let i = 1; i < diffX; i++) {
+        if (chessboard[startX + i * stepX][startY] !== ePiece) {
+          return false;
         }
+      }
+    }
+    else if (diffX === diffY) {
+      let stepX = targetX > startX ? 1 : -1;
+      let stepY = targetY > startY ? 1 : -1;
+      // make sure there are no pieces in the path of bishop
+      for (let i = 1; i < diffX; i++) {
+        if (chessboard[startX + i * stepX][startY + i * stepY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else if (!diffX && diffY){
+      let stepY = targetY > startY ? 1 : -1;
+      console.log(stepY)
+      for (let i = 1; i < diffY; i++) {
+        
+        if (chessboard[startX][startY + i * stepY] !== ePiece) {
+          return false;
+        }
+      }
+    }
+    else {
+      console.log("we got here")
+      return false
+    }
+    return true
+  }  
+};
 
-        reddish()
+function checkmate(beingDragged, startX, startY) {
+  let isBlackKingPresent = chessboard.some(row => row.includes(bKing));
+  if (!isBlackKingPresent) {
+    alert("White Wins!")
+    location.reload();
 
+  }
+  let isWhiteKingPresent = chessboard.some(row => row.includes(wKing));
+  if (!isWhiteKingPresent) {
+    alert("Black Wins")
+    location.reload();
 
+  }
+  /*
+  let whitePossibleMoves = [];
+  let blackPossibleMoves = [];
+  
+        const blackKingPiece = document.querySelector('.king.black');
+        if(chessboard[startX][startY].movement(beingDragged, bKing.posX, bKing.posY) 
+          && !chessboard[bKing.posX][bKing.posY].movement(blackKingPiece, startX, startY)) {
+           
+            blackCheck = true
+         
+          console.log("check");
 
-        // winning()
+          for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+              if (chessboard[bKing.posX][bKing.posY].movement(blackKingPiece, i, j)) {
+         
+              const whitePieces = document.querySelectorAll('.white');
+              const pieces = Array.from(whitePieces);
 
-        numOfKings = 0
-
-
-        document.querySelectorAll('.box').forEach(win => {
-            if (win.innerText == 'Wking' || win.innerText == 'Bking') {
-                numOfKings += 1
+                for (let k = 0; k < pieces.length; k++) {
+                  const piece = pieces[k];
+                  let posX = piece.parentNode.getAttribute("data-row") - 0;
+                  let posY = piece.parentNode.getAttribute("data-col") - 0;
+                  console.log(piece)
+                  console.log(chessboard[posX][posY].movement(piece, i, j))
+                  if (chessboard[posX][posY].movement(piece, i, j)) {
+                    break;
+                  }
+                  if (k === pieces.length - 1) {
+                    let formattedString = `[${i}, ${j}]`;
+                    whitePossibleMoves.push(formattedString)
+                  }
+                }
+              }
             }
+          }
+          if(blackPossibleMoves.length === 0 && blackCheck === true) {
+            alert("White Won")
+            location.reload();
+          }
+          const blackPieces = document.querySelectorAll('.black:not(.king)');
+          const pieces = Array.from(blackPieces);
+          let diffX = Math.abs(startX - bKing.posX); 
+          let diffY = Math.abs(bKing.posY - startY);
+          for (let g = 0; g < pieces.length; g++){
+            const piece = pieces[g];
+            let posX = piece.parentNode.getAttribute("data-row") - 0;
+            let posY = piece.parentNode.getAttribute("data-col") - 0;
+              if(diffX && !diffY) {
+              console.log("hi baby")
+                
+                let stepX = bKing.posX > startX ? 1 : -1;
+                console.log(stepX)
+                for (let i = 0; i < diffX; i++) {
+                  let xValue = startX + i * stepX;
+                  console.log(xValue)
+                  if (chessboard[posX][posY].movement(piece, xValue, startY)) {
+                    console.log(piece)
 
-        })
+                    let formattedString = `[${xValue}, ${startY}]`;
+                    blackPossibleMoves.push(formattedString)
+                  }
+                }
+              }
+              else if (!diffX && diffY) {
+                let stepY = bKing.posY > posY ? 1 : -1;
+    
+                for (let i = 0; i < diffY; i++) {
+                  let yValue = startY + i * stepY
+                  if (chessboard[posX][posY].movement(piece, startX, yValue)) {
+                    console.log(piece)
 
-        if (numOfKings == 1) {
-            setTimeout(() => {
-                // console.log(`${toggle}`) 
-                if (tog % 2 == 0) {
-                    alert('White Wins !!')
-                    location.reload()
+                    let formattedString = `[${startX}, ${yValue}]`;
+                    blackPossibleMoves.push(formattedString)
+                  }
                 }
-                else if (tog % 2 !== 0) {
-                    alert('Black Wins !!')
-                    location.reload()
+
+              }
+              else if (diffX === diffY) {
+         
+              let stepX = bKing.posX > startX ? 1 : -1;
+              let stepY = bKing.posY > startY ? 1 : -1;
+            
+              for (let i = 0; i < diffX; i++) {
+                let xValue = startX + i * stepX
+                let yValue = startY + i * stepY
+                if (chessboard[posX][posY].movement(piece, xValue, yValue)) {
+                  console.log(piece)
+                  console.log("hello")
+                  let formattedString = `[${xValue}, ${yValue}]`;
+                  blackPossibleMoves.push(formattedString)
                 }
-            }, 100)
+              }
+            
+              }
+          }
+    }
+    console.log(blackPossibleMoves)
+  
+  
+    const whiteKingPiece = document.querySelector('.king.white')
+
+    if(chessboard[startX][startY].movement(beingDragged, wKing.posX, wKing.posY) 
+    && !chessboard[wKing.posX][wKing.posY].movement(whiteKingPiece, startX, startY)) {
+      
+    
+      whiteCheck = true
+      console.log("nonwhite")
+      whitePossibleMoves = []
+        for(let i = 0; i < 8; i++) {
+          for(let j = 0; j < 8; j++) {
+            if (chessboard[wKing.posX][wKing.posY].movement(whiteKingPiece, i, j)) {
+         
+              const blackPieces = document.querySelectorAll('.black');
+              const pieces = Array.from(blackPieces);
+
+                for (let k = 0; k < pieces.length; k++) {
+                  const piece = pieces[k];
+                  let posX = piece.parentNode.getAttribute("data-row") - 0;
+                  let posY = piece.parentNode.getAttribute("data-col") - 0;
+                  console.log(piece)
+                  console.log(chessboard[posX][posY].movement(piece, i, j))
+                  if (chessboard[posX][posY].movement(piece, i, j)) {
+                    break;
+                  }
+                  if (k === pieces.length - 1) {
+                    let formattedString = `[${i}, ${j}]`;
+                    blackPossibleMoves.push(formattedString)
+                  }
+      }
+    }
+    if(whitePossibleMoves.length === 0 && whiteCheck === true) {
+
+    
+      alert("Black Won")
+      location.reload();
+    
+  }
+          }
         }
+      
+    }
+    else {
+      return false
+    }
+  
 
+  
+  
 
+ */
+}
 
-    })
+//black pieces
+let ePiece = new emptyPiece();
+let bRook1 = new Rook(0, 0, false, 'black');
+let bRook2 = new Rook(0, 7, false, 'black');
+let bKnight1 = new Knight(0, 1, 'black');
+let bKnight2 = new Knight(0, 6, 'black');
+let bBishop1 = new Bishop(0, 2, 'black');
+let bBishop2 = new Bishop(0, 5, 'black');
+let bQueen = new Queen(0, 3, 'black');
+let bKing = new King(0, 4, false, 'black');
+let bPawn1 = new Pawn(1, 0, false, 'black');
+let bPawn2 = new Pawn(1, 1, false, 'black');
+let bPawn3 = new Pawn(1, 2, false, 'black');
+let bPawn4 = new Pawn(1, 3, false, 'black');
+let bPawn5 = new Pawn(1, 4, false, 'black');
+let bPawn6 = new Pawn(1, 5, false, 'black');
+let bPawn7 = new Pawn(1, 6, false, 'black');
+let bPawn8 = new Pawn(1, 7, false, 'black');
 
+//white pieces
+let wPawn1 = new Pawn(6, 0, false, 'white');
+let wPawn2 = new Pawn(6, 1, false,'white');
+let wPawn3 = new Pawn(6, 2, false,'white');
+let wPawn4 = new Pawn(6, 3, false, 'white');
+let wPawn5 = new Pawn(6, 4, false, 'white');
+let wPawn6 = new Pawn(6, 5, false, 'white');
+let wPawn7 = new Pawn(6, 6, false, 'white');
+let wPawn8 = new Pawn(6, 7, false, 'white');
+let wRook1 = new Rook(7, 0, false, 'white');
+let wRook2 = new Rook(7, 7, false, 'white');
+let wKnight1 = new Knight(7, 1, 'white');
+let wKnight2 = new Knight(7, 6, 'white');
+let wBishop1 = new Bishop(7, 2, 'white');
+let wBishop2 = new Bishop(7, 5, 'white');
+let wQueen = new Queen(7, 3, 'white');
+let wKing = new King(7, 4, false, 'white');
+
+let chessboard = [
+  [bRook1, bKnight1, bBishop1, bQueen, bKing, bBishop2, bKnight2, bRook2],
+  [bPawn1, bPawn2, bPawn3, bPawn4, bPawn5, bPawn6, bPawn7, bPawn8],
+  [ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece],
+  [ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece],
+  [ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece],
+  [ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece, ePiece],
+  [wPawn1, wPawn2, wPawn3, wPawn4, wPawn5, wPawn6, wPawn7, wPawn8],
+  [wRook1, wKnight1, wBishop1, wQueen, wKing, wBishop2, wKnight2, wRook2],
+];
+
+let squares = document.querySelectorAll('.draggable')
+
+squares.forEach(square => {
+  square.addEventListener('dragstart', dragStart)
+  square.addEventListener('dragover', dragOver)
+  square.addEventListener('dragenter', dragEnter)
+  square.addEventListener('dragleave', dragLeave)
+  square.addEventListener('drop', dragDrop)
 })
 
+let beingDragged;
+function dragStart(e) {
+    if (e.target.classList.contains(whosTurn)) {
+      
+      beingDragged = e.target;
 
+      e.stopPropagation();
+      beingDragged.parentNode.style.opacity = '1';
+    }
+    else {
+      e.preventDefault();
+    } 
+}
+function dragOver(e) {
+  e.preventDefault()
+}
+function dragEnter (e) {
+  if ((!e.target.classList.contains(whosTurn))) {
+    e.target.classList.add('highlight');
+  }
+}
+function dragLeave (e) { 
+  e.target.classList.remove('highlight')
+}
+function dragDrop(e) {
+  const targetElement = e.currentTarget;
+  
+  const existingPiece = targetElement.querySelector('.black, .white');
+  const targetX = targetElement.getAttribute('data-row') - 0;
+  const targetY = targetElement.getAttribute('data-col') - 0;
+  const dragColor = beingDragged.classList.toString();
+  const targetColor = e.target.classList.toString();
+  const startX = beingDragged.parentNode.getAttribute('data-row') - 0;
+  const startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+  const moveMade = chessboard[startX][startY].movement(beingDragged, targetX, targetY);
 
-// Moving the element
-document.querySelectorAll('.box').forEach(item => {
-
-    item.addEventListener('click', function () {
-
-
-        if (item.style.backgroundColor == 'pink') {
-
-            pinkId = item.id
-            pinkText = item.innerText
-
-            document.querySelectorAll('.box').forEach(item2 => {
-
-                item2.addEventListener('click', function () {
-
-                    getId = item2.id
-                    arr = Array.from(getId)
-                    arr.shift()
-                    aside = eval(arr.pop())
-                    arr.push('0')
-                    aup = eval(arr.join(''))
-                    a = aside + aup
-
-
-                    if (item2.style.backgroundColor == 'green' && item2.innerText.length == 0) {
-                        insertMove(pinkId,getId)
-                        if (pinkText == `Wpawn` && aup == 800) {
-
-                            document.getElementById(`b${a}`).innerText = 'Wqueen'
-                            document.getElementById(pinkId).innerText = ''
-                            coloring()
-                            insertImage()
-
-                        }
-                        else if (pinkText == `Bpawn` && aup == 100) {
-
-                            document.getElementById(`b${a}`).innerText = 'Bqueen'
-                            document.getElementById(pinkId).innerText = ''
-                            coloring()
-                            insertImage()
-
-                        }
-                        else {
-
-
-
-                            document.getElementById(pinkId).innerText = ''
-                            item2.innerText = pinkText
-                            coloring()
-                            insertImage()
-                        }
-
-                    }
-
-                    else if (item2.style.backgroundColor == 'aqua') {
-                        if(item2.id=='b103'){
-                            document.getElementById('b101').innerText = ''
-                            document.getElementById('b102').innerText = ''
-                            document.getElementById('b103').innerText = 'Wking'
-                            document.getElementById('b104').innerText = 'Wrook'
-                            document.getElementById('b105').innerText = ''
-                            document.getElementById(pinkId).innerText = ''
-                            whiteCastleChance=false
-                            coloring()
-                            insertImage()
-                            insertCastle("W","O-O-O")
-                            
-                        }
-                        else if(item2.id=='b107'){
-                            document.getElementById('b105').innerText = ''
-                            document.getElementById('b106').innerText = 'Wrook'
-                            document.getElementById('b107').innerText = 'Wking'
-                            document.getElementById('b108').innerText = ''
-                            document.getElementById(pinkId).innerText = ''
-                            whiteCastleChance=false
-                            coloring()
-                            insertImage()
-                            insertCastle("W","O-O")
-
-                        }
-                        else if(item2.id=='b803'){
-                            document.getElementById('b801').innerText = ''
-                            document.getElementById('b802').innerText = ''
-                            document.getElementById('b803').innerText = 'Bking'
-                            document.getElementById('b804').innerText = 'Brook'
-                            document.getElementById('b805').innerText = ''
-                            document.getElementById(pinkId).innerText = ''
-                            blackCastleChance=false
-                            coloring()
-                            insertImage()
-                            insertCastle("B","O-O-O")
-                        }
-                        else if(item2.id=='b807'){
-                            document.getElementById('b805').innerText = ''
-                            document.getElementById('b806').innerText = 'Brook'
-                            document.getElementById('b807').innerText = 'Bking'
-                            document.getElementById('b808').innerText = ''
-                            document.getElementById(pinkId).innerText = ''
-                            blackCastleChance=false
-                            coloring()
-                            insertImage()
-                            insertCastle("B","O-O")
-
-                        }
-                    }
-
-                })
-            })
-
-        }
-
-    })
-
-})
-
-
-
-
-
-
-// Prvents from selecting multiple elements
-z = 0
-document.querySelectorAll('.box').forEach(ee => {
-    ee.addEventListener('click', function () {
-        z = z + 1
-        if (z % 2 == 0 && ee.style.backgroundColor !== 'green' && ee.style.backgroundColor !== 'aqua') {
-            coloring()
-        }
-    })
-})
+  if(moveMade && dragColor !== targetColor) {
+    if (existingPiece) {
+      existingPiece.remove();
+      targetElement.append(beingDragged);
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
+    }
+    else if(!existingPiece) {
+      targetElement.append(beingDragged);
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
+    }
+    audio.play();
+    e.target.classList.remove('highlight');
+    
+    switchTurns();
+    
+    checkmate(beingDragged, targetX, targetY)
+  }
+  else {
+    e.target.classList.remove('highlight');
+  } 
+}
+ 

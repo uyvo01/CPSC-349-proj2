@@ -1,31 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-}
-
 body {
-    display: grid;
-    place-items: center;
-    overflow-x: hidden;
-}
-
-h1 {
-    margin: 10px;
+    display: flex;
+    background-color: green;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     text-align: center;
 }
-h2 {
-    margin: 10px;
-    text-align: center;
-}
-
-button {
-    width: 100px;
-    height: 30px;
-}
-button:hover{
-    background-color: orange;
-}
-
 .container {
     display: flex;
     flex-direction: column;
@@ -36,100 +16,127 @@ button:hover{
     column-gap: 50px;
     order:2;
 }
-.pagebox {
-    margin-top: 50px;
-    width: 200px;
-    height: 600px;
-    border: 1px solid blue;
-    background-color: rgb(196, 255, 199);
-}
 
-ul {
-    display: grid;
-    grid-template-columns: 1fr;
+button {
+    width: 100px;
+    height: 30px;
 }
-
-.divv {
-    display: flex;
-}
-
-li {
-    list-style: none;
-    display: grid;
-    place-items: center;
-    font-size: 0px;
-}
-.letters{
-    margin: auto;
-    width: 75px;
-    height: 25px;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
- 
-}
-.numbers{
-    margin: auto;
-    width: 75px;
-    height: 25px;
-    font-size: 20px;
-    font-weight: bold;
- 
-}
-.box {
-    margin: .5px;
-    width: 75px;
-    height: 75px;
-    
-}
-
-#tog {
-    margin: 10px 0px;
-}
-
-
-.allimg {
-    max-width: 80%;
-    max-height:90%;
-    position: relative;
-    bottom: 5px;
-}
-.allimg:hover{
+button:hover{
     background-color: orange;
-    color:sandybrown
 }
 
-.allpawn {
-    transform: scale(.7);
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 75px);
+    grid-template-rows: repeat(8, 75px);
+    color: white; 
+    font-size: 74px;
+}
+.white {
+    color: white;
+    padding: 0;
+}
+.black {
+    color: black;
+    padding: 0;
+}
+.whitesq {
+    background-color: 	rgb(196, 164, 132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.blacksq {
+    background-color: rgb(92, 64, 51);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.authcont {
-    width: 100vw;
+#timer {
+    position: absolute;
+    top: 30px; /* Adjust this value */
+    left: 50%; 
+    transform: translateX(-50%);
+    display: flexbox;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 200px;
+    padding: 8px;
+    color: white;
+    font-size: 21px;
 }
 
-.author {
-    float: right;
-    margin-right: 50px;
-
+.highlight {
+    background-color: red;
+    width: 80px; 
+    height: 80px;
+    border: 1px solid black;
 }
 
-
-@media (max-width:650px){
-
-    #tog {
-        margin-bottom: 70px;
-
+@media screen and (max-width: 570px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 50px);
+        grid-template-rows: repeat(8, 50px);
+        
+        font-size: 49px;
     }
-
-    .box {
-        width: 11vw;
-        height: 11vw;
+    .highlight {
+        width: 50px;
+        height: 50px;
     }
-    .pagebox {
-        width: 33vw;
-        height: 88vw;
+}
+@media screen and (max-width: 530px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+        color: white; 
+        font-size: 39px;
     }
-    .allimg {
-        width: 7vw;
+    .highlight {
+        width: 40px;
+        height: 40px;
+    }
+}
+@media screen and (max-height: 640px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 60px);
+        grid-template-rows: repeat(8, 60px);
+        color: white; 
+        font-size: 59px;
+    }
+    .highlight {
+        width: 59px;
+        height: 59px;
+    }
+}
+@media screen and (max-height: 550px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 60px);
+        grid-template-rows: repeat(8, 60px);
+        color: white; 
+        font-size: 59px;
+    }
+    .highlight {
+        width: 59px;
+        height: 59px;
+    }
+}
+@media screen and (max-height: 470px) {
+    .board {
+        display: grid;
+        grid-template-columns: repeat(8, 50px);
+        grid-template-rows: repeat(8, 50px);
+        color: white; 
+        font-size: 49px;
+    }
+    .highlight {
+        width: 49px;
+        height: 49px;
     }
 }

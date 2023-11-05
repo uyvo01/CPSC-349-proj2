@@ -107,7 +107,7 @@
                     main.innerHTML = storedValue;
                 }
                 setTimeout(() => {
-                const squares = document.querySelectorAll(".draggable");
+                let squares = document.querySelectorAll(".draggable");
                 squares.forEach((square) => {
                 square.addEventListener("dragstart", dragStart);
                 square.addEventListener("dragover", dragOver);
