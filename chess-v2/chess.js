@@ -9,20 +9,22 @@ let blackTime = 180;
 let pieceMovement = []
 const audio = new Audio('move_sound.wav');
 
-const timerElement = document.getElementById('timer');
+let timerElement = document.getElementById('timer');
 
 
 function updateTime() {
   if(whosTurn === "white") {
     timerElement.textContent = `White's Turn: ${formatTime(whiteTime)}`;
+    timerElement.title=whiteTime;
     if (whiteTime === 0) {
-      alert("Black Wins")
+      alert("Black Wins");
       location.reload();
     }
     
   }
   else {
     timerElement.textContent = `Black's Turn: ${formatTime(blackTime)}`;
+    timerElement.title=blackTime;
     if (blackTime === 0) {
       alert("White Wins")
       location.reload();
@@ -608,7 +610,7 @@ let chessboard = [
   [wRook1, wKnight1, wBishop1, wQueen, wKing, wBishop2, wKnight2, wRook2],
 ];
 
-const squares = document.querySelectorAll('.draggable')
+let squares = document.querySelectorAll('.draggable')
 
 squares.forEach(square => {
   square.addEventListener('dragstart', dragStart)

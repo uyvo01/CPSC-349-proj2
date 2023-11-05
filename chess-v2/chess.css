@@ -6,6 +6,24 @@ body {
     height: 100vh;
     text-align: center;
 }
+.container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 50px;
+    order:2;
+}
+
+button {
+    width: 100px;
+    height: 30px;
+}
+button:hover{
+    background-color: orange;
+}
 
 .board {
     display: grid;
