@@ -122,6 +122,7 @@ class Pawn {
           let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
           let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
           let dragColor = beingDragged.classList.toString();
+          console.log(targetX)
           if (targetX === startX) {
             return false;
           }
@@ -152,9 +153,8 @@ class Pawn {
               if(startX + 1 === targetX && targetY === startY 
                 && chessboard[targetX][targetY] === ePiece) {
                   console.log("hi buddy")
-                if(targetX === 7) {
-                  pawnEvolution(beingDragged, targetX, targetY)
-                }
+                  console.log(targetX)
+              
                 return true
               }
               // black pawn that has moved takes a piece
@@ -162,9 +162,7 @@ class Pawn {
               && chessboard[targetX][targetY].color !== dragColor 
               && chessboard[targetX][targetY] !== ePiece) {
                 
-                if(targetX === 7) {
-                  pawnEvolution(beingDragged, targetX, targetY)
-                }
+              
                 return true
             }
             else {
@@ -194,9 +192,7 @@ class Pawn {
               if(startX - 1 === targetX && targetY === startY && chessboard[targetX][targetY] === ePiece) {
                 
             
-                if(targetX === 0) {
-                  pawnEvolution(beingDragged, targetX, targetY)
-                }
+              
                 return true
               }
               //white piece that has moved takes another piece
@@ -205,10 +201,8 @@ class Pawn {
               && chessboard[targetX][targetY] !== ePiece) {
                 
                
-                
-                if(targetX === 0) {
-                  pawnEvolution(beingDragged, targetX, targetY)
-                }
+                console.log(targetX === 0)
+               
                 return true
               }
               else {
@@ -717,6 +711,10 @@ function dragDrop(e) {
     }
     audio.play();
     e.target.classList.remove('highlight');
+    if (targetX === 0 && dragColor === 'white' && chessboard[targetX][targetY] instanceof Pawn 
+    || targetX === 7 && dragColor === 'black' && chessboard[targetX][targetY] instanceof Pawn) {
+      pawnEvolution(beingDragged, targetX, targetY)
+    }
     
     switchTurns();
     
@@ -727,5 +725,6 @@ function dragDrop(e) {
   } 
   console.log(chessboard)
 }
+ 
  
  
