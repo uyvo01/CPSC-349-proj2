@@ -13,10 +13,18 @@ body {
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
-    column-gap: 50px;
-    order:2;
-}
+    column-gap: 10px;
 
+}
+.container_column {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-flow: row wrap;
+    align-items: center;
+    column-gap:20px;
+
+}
 button {
     width: 100px;
     height: 30px;
@@ -25,6 +33,18 @@ button:hover{
     background-color: orange;
 }
 
+.row{
+    font-size: 30px;
+    color: white;
+}
+.column{
+    font-size: 30px;
+    color: white;
+    height: 72px;
+    align-items: left center;
+    top:20px;
+    
+}
 .board {
     display: grid;
     grid-template-columns: repeat(8, 75px);
@@ -87,6 +107,12 @@ button:hover{
         width: 50px;
         height: 50px;
     }
+    .column{
+        font-size: 25px;
+        color: white;
+        height: 50px;
+        align-items: left center;
+    }
 }
 @media screen and (max-width: 530px) {
     .board {
@@ -99,6 +125,12 @@ button:hover{
     .highlight {
         width: 40px;
         height: 40px;
+    }
+    .column{
+        font-size: 25px;
+        color: white;
+        height: 40px;
+        align-items: left center;
     }
 }
 @media screen and (max-height: 640px) {
