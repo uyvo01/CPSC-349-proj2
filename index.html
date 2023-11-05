@@ -1,148 +1,71 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="chess.css">
-        <title>CHESS: A GAME</title>
-    </head>
-    <body>
-        <main>
-            <div class="container">
-                <div></div>
-                <div>
-                    <button onclick="location.reload()">Refresh</button>
-                </div>
-                <div>
-                    <button onclick="saveGame()">Save</button>
-                </div>
-                <div>
-                    <button onclick="loadGame()">Resume</button>
-                </div>
-            </div>
-            <br />
-            <div class="container_column">
-                <div>
-                    <div class="column">8</div>
-                    <div class="column">7</div>
-                    <div class="column">6</div>
-                    <div class="column">5</div>
-                    <div class="column">4</div>
-                    <div class="column">3</div>
-                    <div class="column">2</div>
-                    <div class="column">1</div>
-                </div>
-                <div class="board">
-                    <div id="timer"></div>
-                    <div class="whitesq draggable" data-row=0 draggable="false" data-col=0><div class="black" alt="castle-piece" id = "black-piece" draggable="true">♜</div></div>
-                    <div class="blacksq draggable" data-row=0 draggable="false" data-col=1><div class="black" alt="knight-piece" id = "black-piece" draggable="true">♞</div></div>
-                    <div class="whitesq draggable" data-row=0 draggable="false" data-col=2><div class="black" alt="bishop-piece" id = "black-piece" draggable="true">♝</div></div>
-                    <div class="blacksq draggable" data-row=0 draggable="false" data-col=3><div class="black" alt="queen-piece" id = "black-piece" draggable="true">♛</div></div>
-                    <div class="whitesq draggable" data-row=0 draggable="false" data-col=4><div class="black king" alt="king-piece" id = "black-king" draggable="true">♚</div></div>
-                    <div class="blacksq draggable" data-row=0 draggable="false" data-col=5><div class="black" alt="bishop-piece" id = "black-piece" draggable="true">♝</div></div>
-                    <div class="whitesq draggable" data-row=0 draggable="false" data-col=6><div class="black" alt="knight-piece" id = "black-piece" draggable="true">♞</div></div>
-                    <div class="blacksq draggable" data-row=0 draggable="false" data-col=7><div class="black" alt="castle-piece" id = "black-piece" draggable="true">♜</div></div>
-                
-                    <div class="blacksq draggable" data-row=1 draggable="false" data-col=0><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=1 draggable="false" data-col=1><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=1 draggable="false" data-col=2><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=1 draggable="false" data-col=3><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=1 draggable="false" data-col=4><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=1 draggable="false" data-col=5><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=1 draggable="false" data-col=6><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=1 draggable="false" data-col=7><div class="black" alt="pawn-piece" id = "black-piece" draggable="true">♟</div></div>
-                    
-                    <div class="whitesq draggable" data-row=2 draggable="false" data-col=0><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=2 draggable="false" data-col=1><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=2 draggable="false" data-col=2><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=2 draggable="false" data-col=3><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=2 draggable="false" data-col=4><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=2 draggable="false" data-col=5><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=2 draggable="false" data-col=6><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=2 draggable="false" data-col=7><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=3 draggable="false" data-col=0><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=3 draggable="false" data-col=1><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=3 draggable="false" data-col=2><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=3 draggable="false" data-col=3><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=3 draggable="false" data-col=4><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=3 draggable="false" data-col=5><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=3 draggable="false" data-col=6><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=3 draggable="false" data-col=7><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=4 draggable="false" data-col=0><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=4 draggable="false" data-col=1><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=4 draggable="false" data-col=2><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=4 draggable="false" data-col=3><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=4 draggable="false" data-col=4><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=4 draggable="false" data-col=5><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=4 draggable="false" data-col=6><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=4 draggable="false" data-col=7><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=5 draggable="false" data-col=0><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=5 draggable="false" data-col=1><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=5 draggable="false" data-col=2><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=5 draggable="false" data-col=3><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=5 draggable="false" data-col=4><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=5 draggable="false" data-col=5><div class="square"   draggable="true"></div></div>
-                    <div class="blacksq draggable" data-row=5 draggable="false" data-col=6><div class="square"   draggable="true"></div></div>
-                    <div class="whitesq draggable" data-row=5 draggable="false" data-col=7><div class="square"   draggable="true"></div></div>
-        
-                    <div class="whitesq draggable" data-row=6 draggable="false" data-col=0><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=6 draggable="false" data-col=1><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=6 draggable="false" data-col=2><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=6 draggable="false" data-col=3><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=6 draggable="false" data-col=4><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=6 draggable="false" data-col=5><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="whitesq draggable" data-row=6 draggable="false" data-col=6><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    <div class="blacksq draggable" data-row=6 draggable="false" data-col=7><div class="white" alt="pawn-piece" id = "white-piece" draggable="true">♟</div></div>
-                    
-                    <div class="blacksq draggable" data-row=7 draggable="false" data-col=0><div class="white" alt="castle-piece" id = "white-piece" draggable="true">♜</div></div>
-                    <div class="whitesq draggable" data-row=7 draggable="false" data-col=1><div class="white" alt="knight-piece" id = "white-piece" draggable="true">♞</div></div>
-                    <div class="blacksq draggable" data-row=7 draggable="false" data-col=2><div class="white" alt="bishop-piece" id = "white-piece" draggable="true">♝</div></div>
-                    <div class="whitesq draggable" data-row=7 draggable="false" data-col=3><div class="white" alt="queen-piece" id = "white-piece" draggable="true">♛</div></div>
-                    <div class="blacksq draggable" data-row=7 draggable="false" data-col=4><div class="white king" alt="king-piece" id = "white-king" draggable="true">♚</div></div>
-                    <div class="whitesq draggable" data-row=7 draggable="false" data-col=5><div class="white" alt="bishop-piece" id = "white-piece" draggable="true">♝</div></div>
-                    <div class="blacksq draggable" data-row=7 draggable="false" data-col=6><div class="white" alt="knight-piece" id = "white-piece" draggable="true">♞</div></div>
-                    <div class="whitesq draggable" data-row=7 draggable="false" data-col=7><div class="white" alt="castle-piece" id = "white-piece" draggable="true">♜</div></div>
-                </div>  
-            </div>
-            <div class="container">
-                <div class="row"></div> <div class="row">A</div><div class="row">B</div><div class="row">C</div> <div class="row">D</div><div class="row">E</div> <div class="row" >F</div><div class="row">G</div> <div class="row">H</div>
-            </div>
-        </main>
-        <script src="chess.js"></script>
-        <script>
-            let key = "game";
-            function saveGame() {
-                const main = document.querySelector("main");
-                // store content to local storage
-                let x = localStorage.setItem(key, main.innerHTML);
-                var storedValue = localStorage.getItem(key)
-            }
-            function loadGame() {
-                let keyresume = key;
-                var storedValue = localStorage.getItem(keyresume)
-                if (storedValue){
-                    const main = document.querySelector("main");
-                    main.innerHTML = storedValue;
-                }
+<html lang="en">
 
-                setTimeout(() => {
-                let squares = document.querySelectorAll(".draggable");
-                squares.forEach((square) => {
-                square.addEventListener("dragstart", dragStart);
-                square.addEventListener("dragover", dragOver);
-                square.addEventListener("dragenter", dragEnter);
-                square.addEventListener("dragleave", dragLeave);
-                square.addEventListener("drop", dragDrop);
-                });
-                }, 0);
-                timerElement = document.getElementById('timer');
-                whosTurn = timerElement.innerHTML.substr(0,5);
-                if (whosTurn=="White"){
-                    whosTurn="white";
-                    whiteTime=timerElement.title;
-                }else{
-                    whosTurn ="black";
-                    blackTime=timerElement.title;
-                }
-            }
-        </script>
-    </body>
+<head>
+ <link rel="stylesheet" href="index.css">
+ <title>CHESS: A GAMEs</title>
+ <style>
+ </style>
+</head>
+
+<body>
+ <header>
+  <h1>Welcome to our Chess Game!</h1>
+ </header>
+
+ <div class="container">
+  <div id="chess-rules">
+   <h2>What is Chess?</h2>
+   <p>Chess is a two-player turn-based board game that has been played for EONS, ok maybe not. It is known for its
+    complex rules
+    that allow players to show their merit through different strategies. Some even say learning to play good chess will
+    make you smarter!</p>
+   <h2>History of Chess</h2>
+   <p>Chess has a rich history that dates back to ancient India during the Gupta dynasty, the more you know! It has
+    evolved over the years and spread to different
+    parts of the world, each region adding its unique elements to the game like shogi and chaturanga. Today, chess is
+    played and enjoyed by
+    millions of people worldwide.</p>
+   <h2>Chess Rules</h2>
+   <p>
+    Chess is played on an 8x8 grid. Each player starts with 16 pieces: one king, one
+    queen, two rooks, two knights, two bishops, and eight pawns. The objective is to checkmate (KILL in cold blood) your
+    opponent's
+    king
+    while protecting your own. Here are some key rules for the pieces:
+   </p>
+   <ul>
+    <li>The king moves one square in any direction.</li>
+    <li>The queen can move horizontally, vertically, and diagonally any number of squares.</li>
+    <li>Rooks move horizontally and vertically any number of squares.</li>
+    <li>Knights move in an L-shape: two squares in one direction and one square perpendicular to that.</li>
+    <li>Bishops move diagonally any number of squares.</li>
+    <li>Pawns move forward one square but capture diagonally.</li>
+    <li>Castling allows the king and rook to move together to protect the king.</li>
+    <li>Pawns can be promoted to any other piece if they reach the opponent's back rank.</li>
+   </ul>
+  </div>
+
+  <br>
+
+  <a href="chess.html">Play Our Chess NOW!</a>
+
+  <h2 class="text">Our Team:</h2>
+  <div id="team-members">
+   <div class="member">
+    <h3>Uy Vo</h3>
+   </div>
+   <div class="member">
+    <h3>Nestor Reategui</h3>
+   </div>
+   <div class="member">
+    <h3>Robin Dunne</h3>
+   </div>
+   <div class="member">
+    <h3>Miles Chao</h3>
+   </div>
+  </div>
+ </div>
+</body>
+
 </html>

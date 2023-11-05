@@ -1,0 +1,63 @@
+  body {
+   font-family: Arial, sans-serif;
+   background-color: green;
+   margin: 0;
+   padding: 0;
+  }
+
+  header {
+   background-color: #333;
+   color: #fff;
+   padding: 20px;
+   text-align: center;
+  }
+
+  h1 {
+   font-size: 36px;
+  }
+
+  .container {
+   max-width: 800px;
+   margin: 20px auto;
+   background-color: #fff;
+   padding: 20px;
+   border-radius: 8px;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  #chess-rules {
+   text-align: center;
+   margin-top: 30px;
+  }
+
+  #team-members {
+   text-align: center;
+   margin-top: 30px;
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
+  }
+
+  .member {
+   margin: 20px;
+   text-align: center;
+   flex: 1;
+   max-width: 200px;
+  }
+
+  ul {
+   list-style-position: inside;
+   padding: 0;
+   margin: 0;
+  }
+
+  li {
+   padding: 0;
+   margin: 0;
+   text-align: left;
+  }
+
+  .text {
+   display: flex;
+   justify-content: center;
+  }
