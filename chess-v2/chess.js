@@ -1,7 +1,12 @@
 //import "pieces.js";
+let whiteCheck = false
+let blackCheck = false
+
 let whosTurn = "white"
 let whiteTime = 181;
 let blackTime = 180; 
+
+let pieceMovement = []
 const audio = new Audio('move_sound.wav');
 
 const timerElement = document.getElementById('timer');
@@ -9,13 +14,21 @@ const timerElement = document.getElementById('timer');
 
 function updateTime() {
   if(whosTurn === "white") {
-    
     timerElement.textContent = `White's Turn: ${formatTime(whiteTime)}`;
+    if (whiteTime === 0) {
+      alert("Black Wins")
+      location.reload();
+    }
+    
   }
   else {
     timerElement.textContent = `Black's Turn: ${formatTime(blackTime)}`;
-
+    if (blackTime === 0) {
+      alert("White Wins")
+      location.reload();
+    }
   }
+
 }
 
 function formatTime(totalSeconds) {
@@ -25,6 +38,7 @@ function formatTime(totalSeconds) {
 }
 
 function switchTurns() {
+
   if (whosTurn === "white") {
     whiteTime += 2;
     whosTurn = "black";
@@ -42,6 +56,7 @@ setInterval(() => {
   } else {
       blackTime--;
   }
+ 
   updateTime();
 }, 1000);
 function pawnEvolution(beingDragged, targetX, targetY) {
@@ -101,6 +116,7 @@ class Pawn {
 
   }
       movement(beingDragged, targetX, targetY) {
+          
           let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
           let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
           let dragColor = beingDragged.classList.toString();
@@ -112,18 +128,16 @@ class Pawn {
             if (!chessboard[startX][startY].hasMoved) {
               //black chess pawn that has not moved moves forward or takes a piece
               if ((startX + 1 === targetX && startY === targetY && chessboard[targetX][targetY] === ePiece
-              || ((Math.abs(startY - targetY) === 1 && chessboard[targetX][targetY] !== ePiece))) 
+              || ((Math.abs(startY - targetY) === 1 && chessboard[targetX][targetY] !== ePiece && (Math.abs(startX - targetX) === 1)))) 
               || (startX + 2 === targetX && startY === targetY 
               && chessboard[startX + 1][startY] === ePiece
               && chessboard[startX + 2][startY] === ePiece))
 
               {
+                console.log("hi buddy")
                 // update chessboard array
                 chessboard[startX][startY].hasMoved = true
-                chessboard[startX][startY].posX = targetX
-                chessboard[startX][startY].posY = targetY
-                chessboard[targetX][targetY] = chessboard[startX][startY]
-                chessboard[startX][startY] = ePiece
+            
                 return true
               }
               //invalid move
@@ -135,11 +149,7 @@ class Pawn {
               //black piece that has moved before moves forward
               if(startX + 1 === targetX && targetY === startY 
                 && chessboard[targetX][targetY] === ePiece) {
-                console.log("impervious")
-                chessboard[startX][startY].posX = targetX
-                chessboard[startX][startY].posY = targetY
-                chessboard[targetX][targetY] = chessboard[startX][startY]
-                chessboard[startX][startY] = ePiece;
+                  console.log("hi buddy")
                 if(targetX === 7) {
                   pawnEvolution(beingDragged, targetX, targetY)
                 }
@@ -150,10 +160,6 @@ class Pawn {
               && chessboard[targetX][targetY].color !== dragColor 
               && chessboard[targetX][targetY] !== ePiece) {
                 
-                chessboard[startX][startY].posX = targetX
-                chessboard[startX][startY].posY = targetY
-                chessboard[targetX][targetY] = chessboard[startX][startY]
-                chessboard[startX][startY] = ePiece
                 if(targetX === 7) {
                   pawnEvolution(beingDragged, targetX, targetY)
                 }
@@ -168,16 +174,13 @@ class Pawn {
             if(!chessboard[startX][startY].hasMoved) {
               // white piece that hasnt moved moves forward or takes a piece
               if((startX - 1 === targetX && startY === targetY && chessboard[targetX][targetY] === ePiece
-                || ((Math.abs(startY - targetY) === 1 && chessboard[targetX][targetY] !== ePiece))) 
+                || ((Math.abs(startY - targetY) === 1 && chessboard[targetX][targetY] !== ePiece && (Math.abs(startX - targetX) === 1)))) 
                 || (startX - 2 === targetX && startY === targetY 
                 && chessboard[startX - 1][startY] === ePiece
                 && chessboard[startX - 2][startY] === ePiece)) {
-
+                
                 chessboard[startX][startY].hasMoved = true
-                chessboard[startX][startY].posX = targetX
-                chessboard[startX][startY].posY = targetY
-                chessboard[targetX][targetY] = chessboard[startX][startY]
-                chessboard[startX][startY] = ePiece
+            
                 return true
               }
               else {
@@ -188,10 +191,7 @@ class Pawn {
               //white piece that has moved moves forward
               if(startX - 1 === targetX && targetY === startY && chessboard[targetX][targetY] === ePiece) {
                 
-                chessboard[startX][startY].posX = targetX
-                chessboard[startX][startY].posY = targetY
-                chessboard[targetX][targetY] = chessboard[startX][startY]
-                chessboard[startX][startY] = ePiece
+            
                 if(targetX === 0) {
                   pawnEvolution(beingDragged, targetX, targetY)
                 }
@@ -202,10 +202,7 @@ class Pawn {
               && chessboard[targetX][targetY].color !== dragColor
               && chessboard[targetX][targetY] !== ePiece) {
                 
-                chessboard[startX][startY].posX = targetX
-                chessboard[startX][startY].posY = targetY
-                chessboard[targetX][targetY] = chessboard[startX][startY]
-                chessboard[startX][startY] = ePiece
+               
                 
                 if(targetX === 0) {
                   pawnEvolution(beingDragged, targetX, targetY)
@@ -244,10 +241,7 @@ class Bishop {
       }
     }
     //update chessboard array
-    chessboard[startX][startY].posX = targetX
-    chessboard[startX][startY].posY = targetY
-    chessboard[targetX][targetY] = chessboard[startX][startY]
-    chessboard[startX][startY] = ePiece
+  
     return true;
   }
 };
@@ -264,13 +258,11 @@ class Rook {
     let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
     let diffX = Math.abs(targetX - startX);
     let diffY = Math.abs(targetY - startY);
-    console.log(diffX)
-    console.log(diffY)
+    
     if(diffX && !diffY) {
 
       let stepX = targetX > startX ? 1 : -1;
-      console.log(stepX)
-      console.log("stepX")
+      
       for (let i = 1; i < diffX; i++) {
         if (chessboard[startX + i * stepX][startY] !== ePiece) {
           return false;
@@ -279,7 +271,7 @@ class Rook {
     }
     else if (!diffX && diffY){
       let stepY = targetY > startY ? 1 : -1;
-      console.log(stepY)
+      
       for (let i = 1; i < diffY; i++) {
         
         if (chessboard[startX][startY + i * stepY] !== ePiece) {
@@ -288,13 +280,10 @@ class Rook {
       }
     }
     else {
-      console.log("we got here")
+      
       return false
     }
-    chessboard[startX][startY].posX = targetX
-    chessboard[startX][startY].posY = targetY
-    chessboard[targetX][targetY] = chessboard[startX][startY]
-    chessboard[startX][startY] = ePiece
+  
     return true
   }
 };
@@ -309,11 +298,11 @@ class Knight {
     let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
     let diffX = Math.abs(targetX - startX);
     let diffY = Math.abs(targetY - startY);
-    if((diffX === 2 && diffY === 1) || (diffX === 1 && diffY === 2)) {
-      chessboard[startX][startY].posX = targetX
-      chessboard[startX][startY].posY = targetY
-      chessboard[targetX][targetY] = chessboard[startX][startY]
-      chessboard[startX][startY] = ePiece
+    const dragColor = beingDragged.classList.toString();
+    if(((diffX === 2 && diffY === 1) || (diffX === 1 && diffY === 2))
+      && chessboard[targetX][targetY].color !== dragColor) {
+      
+     
       return true
     }
     else {
@@ -332,30 +321,27 @@ class King {
   movement(beingDragged, targetX, targetY) {
     let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
     let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
+    
     let diffX = Math.abs(targetX - startX);
     let diffY = Math.abs(targetY - startY);
+    const colorMatch = beingDragged.classList.contains(chessboard[targetX][targetY].color);
     
-    if(diffX === 1 && diffY === 0) {
-      chessboard[startX][startY].posX = targetX
-      chessboard[startX][startY].posY = targetY
-      chessboard[targetX][targetY] = chessboard[startX][startY]
-      chessboard[startX][startY] = ePiece
+    if(diffX === 1 && diffY === 0 && !colorMatch) {
+     
       return true;
     }
-    else if(diffX === 0 && diffY === 1) {
-      chessboard[startX][startY].posX = targetX
-      chessboard[startX][startY].posY = targetY
-      chessboard[targetX][targetY] = chessboard[startX][startY]
-      chessboard[startX][startY] = ePiece
+    else if(diffX === 0 && diffY === 1
+      && !colorMatch) {
+      
+      console.log("its here1")
       return true;
     }
-    else if (diffX === 1 && diffY === 1) {
-      chessboard[startX][startY].posX = targetX
-      chessboard[startX][startY].posY = targetY
-      chessboard[targetX][targetY] = chessboard[startX][startY]
-      chessboard[startX][startY] = ePiece
+    else if (diffX === 1 && diffY === 1 && !colorMatch) {
+     
       return true
     }
+   
+   
     else {
       return false
     }
@@ -370,13 +356,10 @@ class Queen {
   movement(beingDragged, targetX, targetY) {
     let startX = beingDragged.parentNode.getAttribute('data-row') - 0;
     let startY = beingDragged.parentNode.getAttribute('data-col') - 0;
-    let diffX = Math.abs(targetX - startX);
+    let diffX = Math.abs(targetX - startX); 
     let diffY = Math.abs(targetY - startY);
     if(diffX && !diffY) {
-
       let stepX = targetX > startX ? 1 : -1;
-      console.log(stepX)
-      console.log("stepX")
       for (let i = 1; i < diffX; i++) {
         if (chessboard[startX + i * stepX][startY] !== ePiece) {
           return false;
@@ -407,50 +390,212 @@ class Queen {
       console.log("we got here")
       return false
     }
-    chessboard[startX][startY].posX = targetX
-    chessboard[startX][startY].posY = targetY
-    chessboard[targetX][targetY] = chessboard[startX][startY]
-    chessboard[startX][startY] = ePiece
     return true
   }  
 };
 
+function checkmate(beingDragged, startX, startY) {
+  let isBlackKingPresent = chessboard.some(row => row.includes(bKing));
+  if (!isBlackKingPresent) {
+    alert("White Wins!")
+    location.reload();
+
+  }
+  let isWhiteKingPresent = chessboard.some(row => row.includes(wKing));
+  if (!isWhiteKingPresent) {
+    alert("Black Wins")
+    location.reload();
+
+  }
+  /*
+  let whitePossibleMoves = [];
+  let blackPossibleMoves = [];
+  
+        const blackKingPiece = document.querySelector('.king.black');
+        if(chessboard[startX][startY].movement(beingDragged, bKing.posX, bKing.posY) 
+          && !chessboard[bKing.posX][bKing.posY].movement(blackKingPiece, startX, startY)) {
+           
+            blackCheck = true
+         
+          console.log("check");
+
+          for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+              if (chessboard[bKing.posX][bKing.posY].movement(blackKingPiece, i, j)) {
+         
+              const whitePieces = document.querySelectorAll('.white');
+              const pieces = Array.from(whitePieces);
+
+                for (let k = 0; k < pieces.length; k++) {
+                  const piece = pieces[k];
+                  let posX = piece.parentNode.getAttribute("data-row") - 0;
+                  let posY = piece.parentNode.getAttribute("data-col") - 0;
+                  console.log(piece)
+                  console.log(chessboard[posX][posY].movement(piece, i, j))
+                  if (chessboard[posX][posY].movement(piece, i, j)) {
+                    break;
+                  }
+                  if (k === pieces.length - 1) {
+                    let formattedString = `[${i}, ${j}]`;
+                    whitePossibleMoves.push(formattedString)
+                  }
+                }
+              }
+            }
+          }
+          if(blackPossibleMoves.length === 0 && blackCheck === true) {
+            alert("White Won")
+            location.reload();
+          }
+          const blackPieces = document.querySelectorAll('.black:not(.king)');
+          const pieces = Array.from(blackPieces);
+          let diffX = Math.abs(startX - bKing.posX); 
+          let diffY = Math.abs(bKing.posY - startY);
+          for (let g = 0; g < pieces.length; g++){
+            const piece = pieces[g];
+            let posX = piece.parentNode.getAttribute("data-row") - 0;
+            let posY = piece.parentNode.getAttribute("data-col") - 0;
+              if(diffX && !diffY) {
+              console.log("hi baby")
+                
+                let stepX = bKing.posX > startX ? 1 : -1;
+                console.log(stepX)
+                for (let i = 0; i < diffX; i++) {
+                  let xValue = startX + i * stepX;
+                  console.log(xValue)
+                  if (chessboard[posX][posY].movement(piece, xValue, startY)) {
+                    console.log(piece)
+
+                    let formattedString = `[${xValue}, ${startY}]`;
+                    blackPossibleMoves.push(formattedString)
+                  }
+                }
+              }
+              else if (!diffX && diffY) {
+                let stepY = bKing.posY > posY ? 1 : -1;
+    
+                for (let i = 0; i < diffY; i++) {
+                  let yValue = startY + i * stepY
+                  if (chessboard[posX][posY].movement(piece, startX, yValue)) {
+                    console.log(piece)
+
+                    let formattedString = `[${startX}, ${yValue}]`;
+                    blackPossibleMoves.push(formattedString)
+                  }
+                }
+
+              }
+              else if (diffX === diffY) {
+         
+              let stepX = bKing.posX > startX ? 1 : -1;
+              let stepY = bKing.posY > startY ? 1 : -1;
+            
+              for (let i = 0; i < diffX; i++) {
+                let xValue = startX + i * stepX
+                let yValue = startY + i * stepY
+                if (chessboard[posX][posY].movement(piece, xValue, yValue)) {
+                  console.log(piece)
+                  console.log("hello")
+                  let formattedString = `[${xValue}, ${yValue}]`;
+                  blackPossibleMoves.push(formattedString)
+                }
+              }
+            
+              }
+          }
+    }
+    console.log(blackPossibleMoves)
+  
+  
+    const whiteKingPiece = document.querySelector('.king.white')
+
+    if(chessboard[startX][startY].movement(beingDragged, wKing.posX, wKing.posY) 
+    && !chessboard[wKing.posX][wKing.posY].movement(whiteKingPiece, startX, startY)) {
+      
+    
+      whiteCheck = true
+      console.log("nonwhite")
+      whitePossibleMoves = []
+        for(let i = 0; i < 8; i++) {
+          for(let j = 0; j < 8; j++) {
+            if (chessboard[wKing.posX][wKing.posY].movement(whiteKingPiece, i, j)) {
+         
+              const blackPieces = document.querySelectorAll('.black');
+              const pieces = Array.from(blackPieces);
+
+                for (let k = 0; k < pieces.length; k++) {
+                  const piece = pieces[k];
+                  let posX = piece.parentNode.getAttribute("data-row") - 0;
+                  let posY = piece.parentNode.getAttribute("data-col") - 0;
+                  console.log(piece)
+                  console.log(chessboard[posX][posY].movement(piece, i, j))
+                  if (chessboard[posX][posY].movement(piece, i, j)) {
+                    break;
+                  }
+                  if (k === pieces.length - 1) {
+                    let formattedString = `[${i}, ${j}]`;
+                    blackPossibleMoves.push(formattedString)
+                  }
+      }
+    }
+    if(whitePossibleMoves.length === 0 && whiteCheck === true) {
+
+    
+      alert("Black Won")
+      location.reload();
+    
+  }
+          }
+        }
+      
+    }
+    else {
+      return false
+    }
+  
+
+  
+  
+
+ */
+}
+
 //black pieces
 let ePiece = new emptyPiece();
-let bRook1 = new Rook(0, 0, false, 'Black');
-let bRook2 = new Rook(0, 7, false, 'Black');
-let bKnight1 = new Knight(0, 1, 'Black');
-let bKnight2 = new Knight(0, 6, 'Black');
-let bBishop1 = new Bishop(0, 2, 'Black');
-let bBishop2 = new Bishop(0, 5, 'Black');
-let bQueen = new Queen(0, 3, 'Black');
-let bKing = new King(0, 4, false, 'Black');
-let bPawn1 = new Pawn(1, 0, false, 'Black');
-let bPawn2 = new Pawn(1, 1, false, 'Black');
-let bPawn3 = new Pawn(1, 2, false, 'Black');
-let bPawn4 = new Pawn(1, 3, false, 'Black');
-let bPawn5 = new Pawn(1, 4, false, 'Black');
-let bPawn6 = new Pawn(1, 5, false, 'Black');
-let bPawn7 = new Pawn(1, 6, false, 'Black');
-let bPawn8 = new Pawn(1, 7, false, 'Black');
+let bRook1 = new Rook(0, 0, false, 'black');
+let bRook2 = new Rook(0, 7, false, 'black');
+let bKnight1 = new Knight(0, 1, 'black');
+let bKnight2 = new Knight(0, 6, 'black');
+let bBishop1 = new Bishop(0, 2, 'black');
+let bBishop2 = new Bishop(0, 5, 'black');
+let bQueen = new Queen(0, 3, 'black');
+let bKing = new King(0, 4, false, 'black');
+let bPawn1 = new Pawn(1, 0, false, 'black');
+let bPawn2 = new Pawn(1, 1, false, 'black');
+let bPawn3 = new Pawn(1, 2, false, 'black');
+let bPawn4 = new Pawn(1, 3, false, 'black');
+let bPawn5 = new Pawn(1, 4, false, 'black');
+let bPawn6 = new Pawn(1, 5, false, 'black');
+let bPawn7 = new Pawn(1, 6, false, 'black');
+let bPawn8 = new Pawn(1, 7, false, 'black');
 
 //white pieces
-let wPawn1 = new Pawn(6, 0, false, 'White');
-let wPawn2 = new Pawn(6, 1, false,'White');
-let wPawn3 = new Pawn(6, 2, false,'White');
-let wPawn4 = new Pawn(6, 3, false, 'White');
-let wPawn5 = new Pawn(6, 4, false, 'White');
-let wPawn6 = new Pawn(6, 5, false, 'White');
-let wPawn7 = new Pawn(6, 6, false, 'White');
-let wPawn8 = new Pawn(6, 7, false, 'White');
-let wRook1 = new Rook(7, 0, false, 'White');
-let wRook2 = new Rook(7, 7, false, 'White');
-let wKnight1 = new Knight(7, 1, 'White');
-let wKnight2 = new Knight(7, 6, 'White');
-let wBishop1 = new Bishop(7, 2, 'White');
-let wBishop2 = new Bishop(7, 5, 'White');
-let wQueen = new Queen(7, 3, 'White');
-let wKing = new King(7, 4, false, 'White');
+let wPawn1 = new Pawn(6, 0, false, 'white');
+let wPawn2 = new Pawn(6, 1, false,'white');
+let wPawn3 = new Pawn(6, 2, false,'white');
+let wPawn4 = new Pawn(6, 3, false, 'white');
+let wPawn5 = new Pawn(6, 4, false, 'white');
+let wPawn6 = new Pawn(6, 5, false, 'white');
+let wPawn7 = new Pawn(6, 6, false, 'white');
+let wPawn8 = new Pawn(6, 7, false, 'white');
+let wRook1 = new Rook(7, 0, false, 'white');
+let wRook2 = new Rook(7, 7, false, 'white');
+let wKnight1 = new Knight(7, 1, 'white');
+let wKnight2 = new Knight(7, 6, 'white');
+let wBishop1 = new Bishop(7, 2, 'white');
+let wBishop2 = new Bishop(7, 5, 'white');
+let wQueen = new Queen(7, 3, 'white');
+let wKing = new King(7, 4, false, 'white');
 
 let chessboard = [
   [bRook1, bKnight1, bBishop1, bQueen, bKing, bBishop2, bKnight2, bRook2],
@@ -462,24 +607,6 @@ let chessboard = [
   [wPawn1, wPawn2, wPawn3, wPawn4, wPawn5, wPawn6, wPawn7, wPawn8],
   [wRook1, wKnight1, wBishop1, wQueen, wKing, wBishop2, wKnight2, wRook2],
 ];
-
-const pieces = document.querySelectorAll('.piece');
-
-pieces.forEach(piece => {
-    piece.addEventListener('dragstart', (event) => {
-        // Set the dragged piece's data and style it during the drag
-        event.dataTransfer.setData('text/plain', ''); // Essential for Firefox
-        event.target.style.opacity = '1'; // Ensure full opacity while dragging
-        // Other custom drag behaviors you might want to add
-    });
-
-    piece.addEventListener('dragend', (event) => {
-        // Reset the style of the piece after the drag
-        event.target.style.opacity = '1'; // Set back to 100% opacity
-        // Other actions after the drag ends
-    });
-});
-
 
 const squares = document.querySelectorAll('.draggable')
 
@@ -493,9 +620,10 @@ squares.forEach(square => {
 
 let beingDragged;
 function dragStart(e) {
-    if (e.target.classList.toString() === whosTurn) {
+    if (e.target.classList.contains(whosTurn)) {
+      
       beingDragged = e.target;
-      console.log(beingDragged)
+
       e.stopPropagation();
       beingDragged.parentNode.style.opacity = '1';
     }
@@ -507,7 +635,7 @@ function dragOver(e) {
   e.preventDefault()
 }
 function dragEnter (e) {
-  if (beingDragged.classList.toString() !== e.target.classList.toString()) {
+  if ((!e.target.classList.contains(whosTurn))) {
     e.target.classList.add('highlight');
   }
 }
@@ -526,21 +654,31 @@ function dragDrop(e) {
   const startY = beingDragged.parentNode.getAttribute('data-col') - 0;
   const moveMade = chessboard[startX][startY].movement(beingDragged, targetX, targetY);
 
-  console.log(targetColor)
-  console.log(dragColor)
   if(moveMade && dragColor !== targetColor) {
-    if (existingPiece && dragColor !== targetColor) {
+    if (existingPiece) {
       existingPiece.remove();
       targetElement.append(beingDragged);
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
     }
     else if(!existingPiece) {
       targetElement.append(beingDragged);
+      chessboard[startX][startY].posX = targetX
+      chessboard[startX][startY].posY = targetY
+      chessboard[targetX][targetY] = chessboard[startX][startY]
+      chessboard[startX][startY] = ePiece
     }
     audio.play();
     e.target.classList.remove('highlight');
+    
     switchTurns();
+    
+    checkmate(beingDragged, targetX, targetY)
   }
   else {
     e.target.classList.remove('highlight');
   } 
 }
+ 
